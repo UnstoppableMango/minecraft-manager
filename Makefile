@@ -31,6 +31,7 @@ start:
 	$(BUN) run start
 
 build: dist/index.html
+lint: .make/ct-lint
 docker: .make/docker-build
 dev-cluster: ${KUBECONFIG} .make/kind-load
 helm-template: .make/helm-template
