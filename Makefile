@@ -1,9 +1,15 @@
 _ != mkdir -p .make bin
 
+PROJECT := minecraft-manager
+
 LOCAL_BIN := ${CURDIR}/bin
 BUN       := ${LOCAL_BIN}/bun
 DEVCTL    := ${LOCAL_BIN}/devctl
 DOCKER    := docker
+KIND      := ${LOCAL_BIN}/kind
+KUBECTL   := ${LOCAL_BIN}/kubectl
+
+export GOBIN := ${LOCAL_BIN}
 
 TS_SRC != $(DEVCTL) list --ts
 
@@ -17,8 +23,12 @@ start:
 
 build: dist/index.html
 docker: .make/docker-build
+dev-cluster: .make/kind-cluster
 
-clean:
+down: | bin/kind
+	[ -f .make/kind-cluster ] && $(KIND) delete cluster --name ${PROJECT}
+
+clean: down
 	rm -rf dist .make
 
 dist/index.html: | bin/bun
@@ -29,10 +39,17 @@ bin/bun: .versions/bun | .make/install-bun.sh bin/devctl
 	@touch $@ && rm -f _bun
 
 bin/devctl: .versions/devctl
-	GOBIN=${LOCAL_BIN} go install github.com/unmango/devctl@v$(shell cat $<)
+	go install github.com/unmango/devctl@v$(shell cat $<)
+
+bin/kind: .versions/kind | bin/devctl
+	go install sigs.k8s.io/kind@$(shell $(DEVCTL) $<)
+
+bin/kubectl: .versions/kubernetes | bin/devctl
+	curl -L "https://dl.k8s.io/release/$(shell $(DEVCTL) $<)/bin/$(shell go env GOOS)/$(shell go env GOARCH)/kubectl" -o $@
+	chmod +x $@
 
 .envrc: hack/example.envrc
-	cp $< $@
+	cp $< $@ && chmod u=r,g=,o= $@
 
 .make/docker-build: Dockerfile package.json bun.lock bunfig.toml ${TS_SRC}
 	$(DOCKER) build . -t minecraft-manager:latest
@@ -49,3 +66,10 @@ bin/devctl: .versions/devctl
 .make/install-bun.sh: .versions/bun
 	curl -fsSL https://bun.sh/install -o $@
 	chmod +x $@
+
+.make/kind-cluster: .versions/kubernetes | bin/kind
+	$(KIND) get clusters | grep ${PROJECT} || \
+	$(KIND) create cluster \
+	--name ${PROJECT} \
+	--image kindest/node:$(shell $(DEVCTL) $<) \
+	--kubeconfig $@
