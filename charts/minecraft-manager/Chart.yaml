@@ -3,6 +3,6 @@ name: minecraft-manager
 description: A visual management tool for deploying Minecraft servers across various platforms.
 type: application
 version: 0.1.0
-appVersion: "0.1.0"
+appVersion: "0.0.1-alpha"
 maintainers:
   - name: UnstoppableMango

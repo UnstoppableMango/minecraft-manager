@@ -1,7 +1,7 @@
 _ != mkdir -p .make bin
 
 PROJECT := minecraft-manager
-IMG     ?= ${PROJECT}:v0.0.1-alpha
+IMG     ?= ${PROJECT}:0.0.1-alpha
 
 LOCAL_BIN := ${CURDIR}/bin
 
@@ -36,10 +36,7 @@ docker: .make/docker-build
 dev-cluster: ${KUBECONFIG} .make/kind-load
 helm-template: .make/helm-template
 
-down: | bin/kind
-	[ -f ${KUBECONFIG} ] && \
-	$(KIND) delete cluster --name ${PROJECT} && \
-	rm -f ${KUBECONFIG}
+down: .make/kind-delete
 
 clean: down
 	rm -rf dist .make
@@ -95,16 +92,33 @@ bin/kubectl: .versions/kubernetes | bin/devctl
 	--name ${PROJECT} \
 	--image kindest/node:$(shell $(DEVCTL) $<)
 
+.make/kind-delete: .make/helm-uninstall | bin/kind
+	[ -f ${KUBECONFIG} ] && \
+	$(KIND) delete cluster --name ${PROJECT} && \
+	rm -f ${KUBECONFIG}
+
 .make/kind-load: .make/kind-cluster .make/docker-build | bin/kind
-	$(KIND) load docker-image ${IMG}
+	$(KIND) load docker-image --name ${PROJECT} ${IMG}
 	@touch $@
 
 .make/minecraft-manager-0.1.0.tgz: | bin/helm
 	$(HELM) package charts/${PROJECT} --destination $(dir $@)
 
-.make/helm-template: $(wildcard charts/${PROJECT}/*) | bin/helm
+.make/helm-template: ${CHART_SRC} | bin/helm
 	$(HELM) template ${CURDIR}/charts/${PROJECT} > $@
 
-.make/ct-lint: .versions/chart-testing .ct/chart_schema.yaml .ct/lintconf.yaml ${CHART_SRC}
+.make/helm-install: ${CHART_SRC} | bin/helm .make/kind-load
+	$(HELM) install test ./charts/${PROJECT} -f ./charts/${PROJECT}/ci/kind-values.yaml
+	@touch $@
+
+.make/helm-uninstall: ${CHART_SRC} | bin/helm
+	[ -f .make/helm-install ] && \
+	$(HELM) uninstall test && \
+	rm -f .make/helm-install || true
+
+.make/ct-lint: .ct/chart_schema.yaml .ct/lintconf.yaml ${CHART_SRC} | bin/devctl
 	$(CT) lint
 	@touch $@
+
+.make/ct-install: .ct/chart_schema.yaml .ct/lintconf.yaml ${CHART_SRC} | bin/devctl .make/kind-load
+	$(CT) install --helm-extra-args '--timeout 30s'

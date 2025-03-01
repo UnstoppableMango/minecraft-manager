@@ -1,0 +1,4 @@
+image:
+  repository: minecraft-manager
+  pullPolicy: Never
+  tag: 0.0.1-alpha
