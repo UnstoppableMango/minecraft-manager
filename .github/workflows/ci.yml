@@ -106,6 +106,7 @@ jobs:
           cache-to: type=gha
           cache-from: type=gha
           tags: minecraft-manager:0.0.1-alpha
+          load: true
 
       - name: Load image into kind
         if: steps.list-changed.outputs.changed == 'true'
