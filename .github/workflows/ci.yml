@@ -51,18 +51,64 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
+          cache-to: type=gha
+          cache-from: type=gha
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
   helm:
     name: Helm
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-go@v5
         with:
-          go-version-file: .versions/go
+          fetch-depth: 0
 
-      - run: make bin/helm
-      - run: helm template test ./charts/minecraft-manager
+      - uses: azure/setup-helm@v4.2.0
+        with:
+          version: v3.17.0
+
+      - uses: actions/setup-python@v5.3.0
+        with:
+          python-version: '3.x'
+          check-latest: true
+
+      - uses: helm/chart-testing-action@v2.7.0
+        with:
+          version: 3.12.0
+          yamale_version: 4.0.4
+          yamllint_version: 1.33.0
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run chart-testing (lint)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct lint --target-branch ${{ github.event.repository.default_branch }}
+
+      - uses: helm/kind-action@v1.12.0
+        if: steps.list-changed.outputs.changed == 'true'
+        with:
+          version: v0.27.0
+          kubectl_version: v1.32.2
+
+      - uses: docker/build-push-action@v6
+        if: steps.list-changed.outputs.changed == 'true'
+        with:
+          cache-to: type=gha
+          cache-from: type=gha
+          tags: minecraft-manager:0.0.1-alpha
+
+      - name: Load image into kind
+        if: steps.list-changed.outputs.changed == 'true'
+        run: kind load docker-image minecraft-manager:0.0.1-alpha
+
+      - name: Run chart-testing (install)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct install --target-branch ${{ github.event.repository.default_branch }}
