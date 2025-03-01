@@ -35,7 +35,8 @@ lint: .make/ct-lint
 docker: .make/docker-build
 dev-cluster: ${KUBECONFIG} .make/kind-load
 helm-template: .make/helm-template
-
+helm-install: .make/helm-install
+helm-uninstall: .make/helm-uninstall
 down: .make/kind-delete
 
 clean: down
