@@ -7,6 +7,7 @@ LOCAL_BIN := ${CURDIR}/bin
 BUN       := ${LOCAL_BIN}/bun
 DEVCTL    := ${LOCAL_BIN}/devctl
 DOCKER    := docker
+HELM      := ${LOCAL_BIN}/helm
 KIND      := ${LOCAL_BIN}/kind
 KUBECTL   := ${LOCAL_BIN}/kubectl
 
@@ -26,6 +27,7 @@ start:
 build: dist/index.html
 docker: .make/docker-build
 dev-cluster: ${KUBECONFIG} .make/kind-load
+helm-template: .make/helm-template
 
 down: | bin/kind
 	[ -f ${KUBECONFIG} ] && \
@@ -44,6 +46,9 @@ bin/bun: .versions/bun | .make/install-bun.sh bin/devctl
 
 bin/devctl: .versions/devctl
 	go install github.com/unmango/devctl@v$(shell cat $<)
+
+bin/helm: .versions/helm | bin/devctl
+	go install helm.sh/helm/v3/cmd/helm@$(shell $(DEVCTL) $<)
 
 bin/kind: .versions/kind | bin/devctl
 	go install sigs.k8s.io/kind@$(shell $(DEVCTL) $<)
@@ -80,3 +85,9 @@ bin/kubectl: .versions/kubernetes | bin/devctl
 .make/kind-load: .make/kind-cluster .make/docker-build | bin/kind
 	$(KIND) load docker-image ${IMG}
 	@touch $@
+
+.make/minecraft-manager-0.1.0.tgz: | bin/helm
+	$(HELM) package charts/${PROJECT} --destination $(dir $@)
+
+.make/helm-template: $(wildcard charts/${PROJECT}/*) | bin/helm
+	$(HELM) template ${CURDIR}/charts/${PROJECT} > $@
