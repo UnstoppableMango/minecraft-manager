@@ -1,0 +1,4 @@
+charts:
+  - charts/minecraft-manager
+chart-dirs:
+  - charts/
