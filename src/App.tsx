@@ -1,34 +1,39 @@
 import "./index.css";
-import { APITester } from "./APITester";
+import { JSX, useEffect, useState } from 'react';
+import { emptyMcVersionsNet, listVersions, McVersionsNet } from './versions';
 
-import logo from "./logo.svg";
-import reactLogo from "./react.svg";
+export function App(): JSX.Element {
+  const [loading, setLoading] = useState(true);
+  const [versions, setVersions] = useState<McVersionsNet>(emptyMcVersionsNet);
+  const [error, setError] = useState<string>();
 
-export function App() {
+  useEffect(() => {
+    if (loading && !versions.stable.length) {
+      listVersions()
+        .then(setVersions)
+        .then(() => setLoading(false))
+        .catch(setError)
+    }
+  }, []);
+
+  if (error) {
+    return (
+      <span>Error: {error}</span>
+    )
+  }
+
   return (
-    <div className="max-w-7xl mx-auto p-8 text-center relative z-10">
-      <div className="flex justify-center items-center gap-8 mb-8">
-        <img
-          src={logo}
-          alt="Bun Logo"
-          className="h-24 p-6 transition-all duration-300 hover:drop-shadow-[0_0_2em_#646cffaa] scale-120"
-        />
-        <img
-          src={reactLogo}
-          alt="React Logo"
-          className="h-24 p-6 transition-all duration-300 hover:drop-shadow-[0_0_2em_#61dafbaa] animate-[spin_20s_linear_infinite]"
-        />
+    <div className="w-svw p-8 flex content-center">
+      <div className="mx-auto w-1/2 h-1/3 p-2 rounded-md bg-green-700">
+        <label htmlFor="versions" className='p-2'>Versions</label>
+        <select name="versions" className='p-1 rounded-md bg-gray-800'>
+          {versions.stable.map(v => (
+            <option key={v.semver} value={v.semver} className='p-3'>
+              <span>{v.semver} {v.date.toLocaleDateString()}</span>
+            </option>
+          ))}
+        </select>
       </div>
-
-      <h1 className="text-5xl font-bold my-4 leading-tight">Bun + React</h1>
-      <p>
-        Edit{" "}
-        <code className="bg-[#1a1a1a] px-2 py-1 rounded font-mono">
-          src/App.tsx
-        </code>{" "}
-        and save to test HMR
-      </p>
-      <APITester />
     </div>
   );
 }
