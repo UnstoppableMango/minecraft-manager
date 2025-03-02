@@ -7,5 +7,67 @@
   ],
   "schedule": [
     "before 4am on the first day of the month"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        ".versions/bun"
+      ],
+      "matchStrings": [
+        "(?<currentValue>\\S+)"
+      ],
+      "depNameTemplate": "oven-sh/bun",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.*)"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        ".versions/chart-testing"
+      ],
+      "matchStrings": [
+        "(?<currentValue>\\S+)"
+      ],
+      "depNameTemplate": "helm/chart-testing",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.*)"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        ".versions/devctl"
+      ],
+      "matchStrings": [
+        "(?<currentValue>\\S+)"
+      ],
+      "depNameTemplate": "unmango/devctl",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.*)"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        ".versions/helm"
+      ],
+      "matchStrings": [
+        "(?<currentValue>\\S+)"
+      ],
+      "depNameTemplate": "helm/helm",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.*)"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        ".versions/kind"
+      ],
+      "matchStrings": [
+        "(?<currentValue>\\S+)"
+      ],
+      "depNameTemplate": "kubernetes-sigs/kind",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.*)"
+    }
   ]
 }
