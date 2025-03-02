@@ -5,7 +5,9 @@
 ## Quickstart
 
 `git clone https://github.com/UnstoppableMango/minecraft-manager`
+
 `cd minecraft-manager`
+
 `helm install minecraft-manager charts/minecraft-manager`
 
 ## Installation
@@ -21,5 +23,7 @@
 ArtifactHub/GH Pages/Something coming soon!
 
 `git clone https://github.com/UnstoppableMango/minecraft-manager`
+
 `cd minecraft-manager`
+
 `helm install minecraft-manager charts/minecraft-manager`
