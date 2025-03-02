@@ -1,21 +1,25 @@
-# bun-react-tailwind-template
+# UnstoppableMango's Minecraft UI
 
-To install dependencies:
+`minecraft-manager` is a visual management tool for deploying Minecraft servers across various platforms.
 
-```bash
-bun install
-```
+## Quickstart
 
-To start a development server:
+`git clone https://github.com/UnstoppableMango/minecraft-manager`
+`cd minecraft-manager`
+`helm install minecraft-manager charts/minecraft-manager`
 
-```bash
-bun dev
-```
+## Installation
 
-To run for production:
+### Docker
 
-```bash
-bun start
-```
+[DockerHub](https://hub.docker.com/r/unstoppablemango/minecraft-manager)
 
-This project was created using `bun init` in bun v1.2.4. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+`docker run --rm -p 3000:3000 unstoppablemango/minecraft-manager:main`
+
+### Helm
+
+ArtifactHub/GH Pages/Something coming soon!
+
+`git clone https://github.com/UnstoppableMango/minecraft-manager`
+`cd minecraft-manager`
+`helm install minecraft-manager charts/minecraft-manager`
