@@ -34,10 +34,13 @@ build: dist/index.html
 lint: .make/ct-lint
 docker: .make/docker-build
 dev-cluster: ${KUBECONFIG} .make/kind-load
+dev-container: .make/dev-container
 helm-template: .make/helm-template
 helm-install: .make/helm-install
 helm-uninstall: .make/helm-uninstall
+
 down: .make/kind-delete
+	rm -f .make/kind-config.yaml
 
 clean: down
 	rm -rf dist .make
@@ -75,6 +78,9 @@ bin/kubectl: .versions/kubernetes | bin/devctl
 	$(DOCKER) build . -t ${IMG}
 	@touch $@
 
+.make/dev-container: hack/dev-container.yml .make/kind-cluster | bin/kubectl
+	$(KUBECTL) apply -f $<
+
 .make/bun-test: bun.lock ${TS_SRC} | bin/bun
 	$(BUN) test
 	@touch $@
@@ -87,11 +93,15 @@ bin/kubectl: .versions/kubernetes | bin/devctl
 	curl -fsSL https://bun.sh/install -o $@
 	chmod +x $@
 
-.make/kind-cluster: .versions/kubernetes | bin/kind
+.make/kind-config.yaml: hack/kind-config.yaml
+	cat $< | WORKING_DIR=${CURDIR} envsubst > $@
+
+.make/kind-cluster: .versions/kubernetes | bin/kind .make/kind-config.yaml
 	$(KIND) get clusters | grep ${PROJECT} || \
 	$(KIND) create cluster \
 	--name ${PROJECT} \
-	--image kindest/node:$(shell $(DEVCTL) $<)
+	--image kindest/node:$(shell $(DEVCTL) $<) \
+	--config .make/kind-config.yaml
 
 .make/kind-delete: .make/helm-uninstall | bin/kind
 	[ -f ${KUBECONFIG} ] && \
