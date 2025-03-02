@@ -78,7 +78,7 @@ bin/kubectl: .versions/kubernetes | bin/devctl
 	$(DOCKER) build . -t ${IMG}
 	@touch $@
 
-.make/dev-container: hack/dev-container.yml .make/kind-cluster | bin/kubectl
+.make/dev-container: hack/dev-container.yml .make/kind-cluster .make/shulker-install | bin/kubectl
 	$(KUBECTL) apply -f $<
 
 .make/bun-test: bun.lock ${TS_SRC} | bin/bun
@@ -133,3 +133,10 @@ bin/kubectl: .versions/kubernetes | bin/devctl
 
 .make/ct-install: .ct/chart_schema.yaml .ct/lintconf.yaml ${CHART_SRC} | bin/devctl .make/kind-load
 	$(CT) install --helm-extra-args '--timeout 30s'
+
+.make/shulker-install: .make/shulker-install.yml | bin/kubectl .make/kind-cluster
+	$(KUBECTL) apply -f $<
+	@touch $@
+
+.make/shulker-install.yml: .versions/shulker | bin/devctl
+	curl -Lo $@ https://raw.githubusercontent.com/jeremylvln/Shulker/refs/tags/$(shell $(DEVCTL) $<)/kube/manifests/stable.yaml
