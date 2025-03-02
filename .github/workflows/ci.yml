@@ -106,7 +106,6 @@ jobs:
       - uses: docker/build-push-action@v6
         if: steps.list-changed.outputs.changed == 'true'
         with:
-          cache-to: type=gha
           cache-from: type=gha
           tags: minecraft-manager:0.0.1-alpha
           load: true
