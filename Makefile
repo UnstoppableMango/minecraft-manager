@@ -146,19 +146,19 @@ bin/kubectl: .versions/kubernetes | bin/devctl
 	@touch $@
 
 .make/shulker-install: hack/shulker-values.yml .make/agones-install | bin/kubectl .make/kind-cluster .make/${SHULKER_NS}
-	$(HELM) install ${SHULKER_RELEASE} \
+	[ ! -f $@ ] && $(HELM) install ${SHULKER_RELEASE} \
 	--repo https://jeremylvln.github.io/Shulker/helm-charts \
 	--namespace ${SHULKER_NS} \
 	--values hack/shulker-values.yml \
-	--hide-notes shulker-operator
+	--hide-notes shulker-operator || true
 	@touch $@
 
 .make/agones-install: hack/agones-values.yml | bin/kubectl .make/kind-cluster .make/${SHULKER_NS}
-	$(HELM) install ${AGONES_RELEASE} \
+	[ ! -f $@ ] && $(HELM) install ${AGONES_RELEASE} \
 	--repo https://agones.dev/chart/stable \
 	--namespace ${AGONES_NS} --create-namespace \
 	--values hack/agones-values.yml \
-	--hide-notes agones
+	--hide-notes agones || true
 	@touch $@
 
 .make/agones-uninstall: .make/shulker-uninstall
