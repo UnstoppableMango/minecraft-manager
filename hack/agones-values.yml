@@ -1,0 +1,8 @@
+gameservers:
+  namespaces:
+    - shulker-system
+agones:
+  allocator:
+    install: true
+    service:
+      serviceType: ClusterIP

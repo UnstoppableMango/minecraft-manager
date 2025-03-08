@@ -1,7 +1,13 @@
 _ != mkdir -p .make bin
 
 PROJECT := minecraft-manager
-IMG     ?= ${PROJECT}:0.0.1-alpha
+VERSION ?= 0.0.1-alpha
+IMG     ?= ${PROJECT}:${VERSION}
+
+AGONES_RELEASE  ?= agones
+AGONES_NS       ?= agones-system
+SHULKER_RELEASE ?= shulker
+SHULKER_NS      ?= shulker-system
 
 LOCAL_BIN := ${CURDIR}/bin
 
@@ -33,14 +39,15 @@ start:
 build: dist/index.html
 lint: .make/ct-lint
 docker: .make/docker-build
-dev-cluster: ${KUBECONFIG} .make/kind-load
+dev-cluster: ${KUBECONFIG} .make/kind-load .make/shulker-install
 dev-container: .make/dev-container
 helm-template: .make/helm-template
 helm-install: .make/helm-install
 helm-uninstall: .make/helm-uninstall
+shulker-install: .make/shulker-install
 
 down: .make/kind-delete
-	rm -f .make/kind-config.yaml
+	rm -f .make/kind-config.yaml .make/${SHULKER_NS}
 
 clean: down
 	rm -rf dist .make
@@ -72,7 +79,7 @@ bin/kubectl: .versions/kubernetes | bin/devctl
 	curl -Lo $@ https://raw.githubusercontent.com/helm/chart-testing/refs/tags/$(shell $(DEVCTL) $<)/etc/lintconf.yaml
 
 .envrc: hack/example.envrc
-	cp $< $@ && chmod u=r,g=,o= $@
+	rm -f $@ && cp $< $@ && chmod u=r,g=,o= $@
 
 .make/docker-build: Dockerfile package.json bun.lock bunfig.toml ${TS_SRC}
 	$(DOCKER) build . -t ${IMG}
@@ -103,7 +110,7 @@ bin/kubectl: .versions/kubernetes | bin/devctl
 	--image kindest/node:$(shell $(DEVCTL) $<) \
 	--config .make/kind-config.yaml
 
-.make/kind-delete: .make/helm-uninstall | bin/kind
+.make/kind-delete: .make/helm-uninstall .make/shulker-uninstall .make/agones-uninstall | bin/kind
 	[ -f ${KUBECONFIG} ] && \
 	$(KIND) delete cluster --name ${PROJECT} && \
 	rm -f ${KUBECONFIG}
@@ -134,9 +141,30 @@ bin/kubectl: .versions/kubernetes | bin/devctl
 .make/ct-install: .ct/chart_schema.yaml .ct/lintconf.yaml ${CHART_SRC} | bin/devctl .make/kind-load
 	$(CT) install --helm-extra-args '--timeout 30s'
 
-.make/shulker-install: .make/shulker-install.yml | bin/kubectl .make/kind-cluster
-	$(KUBECTL) apply -f $<
+.make/${SHULKER_NS}:
+	$(KUBECTL) create namespace ${SHULKER_NS}
 	@touch $@
 
-.make/shulker-install.yml: .versions/shulker | bin/devctl
-	curl -Lo $@ https://raw.githubusercontent.com/jeremylvln/Shulker/refs/tags/$(shell $(DEVCTL) $<)/kube/manifests/stable.yaml
+.make/shulker-install: hack/shulker-values.yml .make/agones-install | bin/kubectl .make/kind-cluster .make/${SHULKER_NS}
+	$(HELM) install ${SHULKER_RELEASE} \
+	--repo https://jeremylvln.github.io/Shulker/helm-charts \
+	--namespace ${SHULKER_NS} \
+	--values hack/shulker-values.yml \
+	--hide-notes shulker-operator
+	@touch $@
+
+.make/agones-install: hack/agones-values.yml | bin/kubectl .make/kind-cluster .make/${SHULKER_NS}
+	$(HELM) install ${AGONES_RELEASE} \
+	--repo https://agones.dev/chart/stable \
+	--namespace ${AGONES_NS} --create-namespace \
+	--values hack/agones-values.yml \
+	--hide-notes agones
+	@touch $@
+
+.make/agones-uninstall: .make/shulker-uninstall
+	$(HELM) uninstall --namespace ${AGONES_NS} --ignore-not-found ${AGONES_RELEASE}
+	rm -f .make/agones-install
+
+.make/shulker-uninstall:
+	$(HELM) uninstall --namespace ${SHULKER_NS} --ignore-not-found ${SHULKER_RELEASE}
+	rm -f .make/shulker-install
