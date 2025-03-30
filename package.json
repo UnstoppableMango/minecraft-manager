@@ -14,8 +14,6 @@
     "@protobuf-ts/runtime": "^2.9.6",
     "@protobuf-ts/runtime-rpc": "^2.9.6",
     "bun-plugin-tailwind": "^0.0.15",
-    "google-protobuf": "^3.21.4",
-    "grpc-web": "^1.5.0",
     "react": "^19",
     "react-dom": "^19",
     "tailwindcss": "^4.0.6"
