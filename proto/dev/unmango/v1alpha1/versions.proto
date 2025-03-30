@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package dev.unmango.v1alpha1;
+
+message ListRequest {}
+
+message ListResponse {}
+
+service VersionsService {
+  rpc List(ListRequest) returns (ListResponse);
+}

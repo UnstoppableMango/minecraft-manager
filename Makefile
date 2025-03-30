@@ -16,6 +16,7 @@ DRUN := $(DOCKER) run --rm -it --network host \
 	--workdir=/data --volume ${CURDIR}:/data
 
 DEVCTL  := go tool devctl
+BUF     := go tool buf
 BUN     := ${LOCAL_BIN}/bun
 CT      := $(DRUN) -e KUBECONFIG=.make/kind-cluster quay.io/helmpack/chart-testing:$(shell $(DEVCTL) v chart-testing --prefixed) ct
 HELM    := go tool helm
@@ -39,6 +40,7 @@ start:
 	$(BUN) run start
 
 build: dist/index.html
+gen: .make/buf-generate
 lint: .make/ct-lint
 docker: .make/docker-build
 dev-cluster: ${KUBECONFIG} .make/kind-load .make/shulker-install
@@ -83,6 +85,10 @@ bin/kubectl: .versions/kubernetes
 
 .make/dev-container: hack/dev-container.yml .make/kind-cluster .make/shulker-install | bin/kubectl
 	$(KUBECTL) apply -f $<
+
+.make/buf-generate: buf.yaml buf.gen.yaml $(PROTO_SRC)
+	$(BUF) generate
+	@touch $@
 
 .make/bun-test: bun.lock ${TS_SRC} | bin/bun
 	$(BUN) test
