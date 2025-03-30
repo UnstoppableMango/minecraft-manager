@@ -15,17 +15,19 @@ DOCKER := docker
 DRUN := $(DOCKER) run --rm -it --network host \
 	--workdir=/data --volume ${CURDIR}:/data
 
-DEVCTL  := ${LOCAL_BIN}/devctl
+DEVCTL  := go tool devctl
 BUN     := ${LOCAL_BIN}/bun
 CT      := $(DRUN) -e KUBECONFIG=.make/kind-cluster quay.io/helmpack/chart-testing:$(shell $(DEVCTL) v chart-testing --prefixed) ct
-HELM    := ${LOCAL_BIN}/helm
-KIND    := ${LOCAL_BIN}/kind
+HELM    := go tool helm
+KIND    := go tool kind
 KUBECTL := ${LOCAL_BIN}/kubectl
 
 export GOBIN      := ${LOCAL_BIN}
 export KUBECONFIG := .make/kind-cluster
 
+GO_SRC    != $(DEVCTL) list --go
 TS_SRC    != $(DEVCTL) list --ts
+PROTO_SRC != $(DEVCTL) list --proto
 CHART_SRC := $(wildcard charts/${PROJECT}/*) $(wildcard charts/${PROJECT}/templates/*)
 
 test: .make/bun-test
@@ -52,30 +54,24 @@ down: .make/kind-delete
 clean: down
 	rm -rf dist .make
 
+tidy: $(GO_SRC)
+	go mod tidy
+
 dist/index.html: | bin/bun
 	$(BUN) run build
 
-bin/bun: .versions/bun | .make/install-bun.sh bin/devctl
+bin/bun: .versions/bun | .make/install-bun.sh
 	BUN_INSTALL=${CURDIR} ${CURDIR}/.make/install-bun.sh bun-$(shell $(DEVCTL) $<)
 	@touch $@ && rm -f _bun
 
-bin/devctl: .versions/devctl
-	go install github.com/unmango/devctl@v$(shell cat $<)
-
-bin/helm: .versions/helm | bin/devctl
-	go install helm.sh/helm/v3/cmd/helm@$(shell $(DEVCTL) $<)
-
-bin/kind: .versions/kind | bin/devctl
-	go install sigs.k8s.io/kind@$(shell $(DEVCTL) $<)
-
-bin/kubectl: .versions/kubernetes | bin/devctl
+bin/kubectl: .versions/kubernetes
 	curl -Lo $@ "https://dl.k8s.io/release/$(shell $(DEVCTL) $<)/bin/$(shell go env GOOS)/$(shell go env GOARCH)/kubectl"
 	chmod +x $@
 
-.ct/chart_schema.yaml: .versions/chart-testing | bin/devctl
+.ct/chart_schema.yaml: .versions/chart-testing
 	curl -Lo $@ https://raw.githubusercontent.com/helm/chart-testing/refs/tags/$(shell $(DEVCTL) $<)/etc/chart_schema.yaml
 
-.ct/lintconf.yaml: .versions/chart-testing | bin/devctl
+.ct/lintconf.yaml: .versions/chart-testing
 	curl -Lo $@ https://raw.githubusercontent.com/helm/chart-testing/refs/tags/$(shell $(DEVCTL) $<)/etc/lintconf.yaml
 
 .envrc: hack/example.envrc
@@ -103,42 +99,42 @@ bin/kubectl: .versions/kubernetes | bin/devctl
 .make/kind-config.yaml: hack/kind-config.yaml
 	cat $< | WORKING_DIR=${CURDIR} envsubst > $@
 
-.make/kind-cluster: .versions/kubernetes | bin/kind .make/kind-config.yaml
+.make/kind-cluster: .versions/kubernetes | .make/kind-config.yaml
 	$(KIND) get clusters | grep ${PROJECT} || \
 	$(KIND) create cluster \
 	--name ${PROJECT} \
 	--image kindest/node:$(shell $(DEVCTL) $<) \
 	--config .make/kind-config.yaml
 
-.make/kind-delete: .make/helm-uninstall .make/shulker-uninstall .make/agones-uninstall | bin/kind
+.make/kind-delete: .make/helm-uninstall .make/shulker-uninstall .make/agones-uninstall
 	[ -f ${KUBECONFIG} ] && \
 	$(KIND) delete cluster --name ${PROJECT} && \
 	rm -f ${KUBECONFIG}
 
-.make/kind-load: .make/kind-cluster .make/docker-build | bin/kind
+.make/kind-load: .make/kind-cluster .make/docker-build
 	$(KIND) load docker-image --name ${PROJECT} ${IMG}
 	@touch $@
 
-.make/minecraft-manager-0.1.0.tgz: | bin/helm
+.make/minecraft-manager-0.1.0.tgz:
 	$(HELM) package charts/${PROJECT} --destination $(dir $@)
 
-.make/helm-template: ${CHART_SRC} | bin/helm
+.make/helm-template: ${CHART_SRC}
 	$(HELM) template ${CURDIR}/charts/${PROJECT} > $@
 
-.make/helm-install: ${CHART_SRC} | bin/helm .make/kind-load
+.make/helm-install: ${CHART_SRC} | .make/kind-load
 	$(HELM) install test ./charts/${PROJECT} -f ./charts/${PROJECT}/ci/kind-values.yaml
 	@touch $@
 
-.make/helm-uninstall: ${CHART_SRC} | bin/helm
+.make/helm-uninstall: ${CHART_SRC}
 	[ -f .make/helm-install ] && \
 	$(HELM) uninstall test && \
 	rm -f .make/helm-install || true
 
-.make/ct-lint: .ct/chart_schema.yaml .ct/lintconf.yaml ${CHART_SRC} | bin/devctl
+.make/ct-lint: .ct/chart_schema.yaml .ct/lintconf.yaml ${CHART_SRC}
 	$(CT) lint
 	@touch $@
 
-.make/ct-install: .ct/chart_schema.yaml .ct/lintconf.yaml ${CHART_SRC} | bin/devctl .make/kind-load
+.make/ct-install: .ct/chart_schema.yaml .ct/lintconf.yaml ${CHART_SRC} | .make/kind-load
 	$(CT) install --helm-extra-args '--timeout 30s'
 
 .make/${SHULKER_NS}:
