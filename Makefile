@@ -64,6 +64,9 @@ bin/bun: .versions/bun | .make/install-bun.sh
 	BUN_INSTALL=${CURDIR} ${CURDIR}/.make/install-bun.sh bun-$(shell $(DEVCTL) $<)
 	@touch $@ && rm -f _bun
 
+bin/deno: .versions/deno # CI=1 skips shell setup
+	curl -fsSL https://deno.land/install.sh | CI=1 DENO_INSTALL=${CURDIR} sh -s -- $(shell $(DEVCTL) $<)
+
 bin/kubectl: .versions/kubernetes
 	curl -Lo $@ "https://dl.k8s.io/release/$(shell $(DEVCTL) $<)/bin/$(shell go env GOOS)/$(shell go env GOARCH)/kubectl"
 	chmod +x $@
