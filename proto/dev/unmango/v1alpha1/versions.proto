@@ -2,9 +2,15 @@ syntax = "proto3";
 
 package dev.unmango.v1alpha1;
 
+message Version {
+  string version = 1;
+}
+
 message ListRequest {}
 
-message ListResponse {}
+message ListResponse {
+  repeated Version versions = 1;
+}
 
 service VersionsService {
   rpc List(ListRequest) returns (ListResponse);

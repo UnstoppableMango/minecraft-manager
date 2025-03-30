@@ -11,6 +11,7 @@ tool (
 )
 
 require (
+	github.com/unmango/go v0.3.0
 	google.golang.org/grpc v1.70.0
 	google.golang.org/protobuf v1.36.5
 )
@@ -174,7 +175,6 @@ require (
 	github.com/tetratelabs/wazero v1.9.0 // indirect
 	github.com/unmango/aferox v0.1.2 // indirect
 	github.com/unmango/devctl v0.1.7 // indirect
-	github.com/unmango/go v0.3.0 // indirect
 	github.com/vbatts/tar-split v0.12.1 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect

@@ -4,6 +4,15 @@
 import { ServiceType } from "@protobuf-ts/runtime-rpc";
 import { MessageType } from "@protobuf-ts/runtime";
 /**
+ * @generated from protobuf message dev.unmango.v1alpha1.Version
+ */
+export interface Version {
+    /**
+     * @generated from protobuf field: string version = 1;
+     */
+    version: string;
+}
+/**
  * @generated from protobuf message dev.unmango.v1alpha1.ListRequest
  */
 export interface ListRequest {
@@ -12,7 +21,23 @@ export interface ListRequest {
  * @generated from protobuf message dev.unmango.v1alpha1.ListResponse
  */
 export interface ListResponse {
+    /**
+     * @generated from protobuf field: repeated dev.unmango.v1alpha1.Version versions = 1;
+     */
+    versions: Version[];
 }
+// @generated message type with reflection information, may provide speed optimized methods
+class Version$Type extends MessageType<Version> {
+    constructor() {
+        super("dev.unmango.v1alpha1.Version", [
+            { no: 1, name: "version", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+}
+/**
+ * @generated MessageType for protobuf message dev.unmango.v1alpha1.Version
+ */
+export const Version = new Version$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class ListRequest$Type extends MessageType<ListRequest> {
     constructor() {
@@ -26,7 +51,9 @@ export const ListRequest = new ListRequest$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class ListResponse$Type extends MessageType<ListResponse> {
     constructor() {
-        super("dev.unmango.v1alpha1.ListResponse", []);
+        super("dev.unmango.v1alpha1.ListResponse", [
+            { no: 1, name: "versions", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Version }
+        ]);
     }
 }
 /**

@@ -20,6 +20,51 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type Version struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Version string `protobuf:"bytes,1,opt,name=version,proto3" json:"version,omitempty"`
+}
+
+func (x *Version) Reset() {
+	*x = Version{}
+	mi := &file_dev_unmango_v1alpha1_versions_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Version) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Version) ProtoMessage() {}
+
+func (x *Version) ProtoReflect() protoreflect.Message {
+	mi := &file_dev_unmango_v1alpha1_versions_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Version.ProtoReflect.Descriptor instead.
+func (*Version) Descriptor() ([]byte, []int) {
+	return file_dev_unmango_v1alpha1_versions_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *Version) GetVersion() string {
+	if x != nil {
+		return x.Version
+	}
+	return ""
+}
+
 type ListRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -28,7 +73,7 @@ type ListRequest struct {
 
 func (x *ListRequest) Reset() {
 	*x = ListRequest{}
-	mi := &file_dev_unmango_v1alpha1_versions_proto_msgTypes[0]
+	mi := &file_dev_unmango_v1alpha1_versions_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -40,7 +85,7 @@ func (x *ListRequest) String() string {
 func (*ListRequest) ProtoMessage() {}
 
 func (x *ListRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_dev_unmango_v1alpha1_versions_proto_msgTypes[0]
+	mi := &file_dev_unmango_v1alpha1_versions_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -53,18 +98,20 @@ func (x *ListRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRequest.ProtoReflect.Descriptor instead.
 func (*ListRequest) Descriptor() ([]byte, []int) {
-	return file_dev_unmango_v1alpha1_versions_proto_rawDescGZIP(), []int{0}
+	return file_dev_unmango_v1alpha1_versions_proto_rawDescGZIP(), []int{1}
 }
 
 type ListResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	Versions []*Version `protobuf:"bytes,1,rep,name=versions,proto3" json:"versions,omitempty"`
 }
 
 func (x *ListResponse) Reset() {
 	*x = ListResponse{}
-	mi := &file_dev_unmango_v1alpha1_versions_proto_msgTypes[1]
+	mi := &file_dev_unmango_v1alpha1_versions_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -76,7 +123,7 @@ func (x *ListResponse) String() string {
 func (*ListResponse) ProtoMessage() {}
 
 func (x *ListResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_dev_unmango_v1alpha1_versions_proto_msgTypes[1]
+	mi := &file_dev_unmango_v1alpha1_versions_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -89,7 +136,14 @@ func (x *ListResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListResponse.ProtoReflect.Descriptor instead.
 func (*ListResponse) Descriptor() ([]byte, []int) {
-	return file_dev_unmango_v1alpha1_versions_proto_rawDescGZIP(), []int{1}
+	return file_dev_unmango_v1alpha1_versions_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ListResponse) GetVersions() []*Version {
+	if x != nil {
+		return x.Versions
+	}
+	return nil
 }
 
 var File_dev_unmango_v1alpha1_versions_proto protoreflect.FileDescriptor
@@ -98,9 +152,15 @@ var file_dev_unmango_v1alpha1_versions_proto_rawDesc = []byte{
 	0x0a, 0x23, 0x64, 0x65, 0x76, 0x2f, 0x75, 0x6e, 0x6d, 0x61, 0x6e, 0x67, 0x6f, 0x2f, 0x76, 0x31,
 	0x61, 0x6c, 0x70, 0x68, 0x61, 0x31, 0x2f, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x2e,
 	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x14, 0x64, 0x65, 0x76, 0x2e, 0x75, 0x6e, 0x6d, 0x61, 0x6e,
-	0x67, 0x6f, 0x2e, 0x76, 0x31, 0x61, 0x6c, 0x70, 0x68, 0x61, 0x31, 0x22, 0x0d, 0x0a, 0x0b, 0x4c,
-	0x69, 0x73, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x0e, 0x0a, 0x0c, 0x4c, 0x69,
-	0x73, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0x60, 0x0a, 0x0f, 0x56, 0x65,
+	0x67, 0x6f, 0x2e, 0x76, 0x31, 0x61, 0x6c, 0x70, 0x68, 0x61, 0x31, 0x22, 0x23, 0x0a, 0x07, 0x56,
+	0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x18, 0x0a, 0x07, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f,
+	0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e,
+	0x22, 0x0d, 0x0a, 0x0b, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22,
+	0x49, 0x0a, 0x0c, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+	0x39, 0x0a, 0x08, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x1d, 0x2e, 0x64, 0x65, 0x76, 0x2e, 0x75, 0x6e, 0x6d, 0x61, 0x6e, 0x67, 0x6f, 0x2e,
+	0x76, 0x31, 0x61, 0x6c, 0x70, 0x68, 0x61, 0x31, 0x2e, 0x56, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e,
+	0x52, 0x08, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x32, 0x60, 0x0a, 0x0f, 0x56, 0x65,
 	0x72, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x4d, 0x0a,
 	0x04, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x21, 0x2e, 0x64, 0x65, 0x76, 0x2e, 0x75, 0x6e, 0x6d, 0x61,
 	0x6e, 0x67, 0x6f, 0x2e, 0x76, 0x31, 0x61, 0x6c, 0x70, 0x68, 0x61, 0x31, 0x2e, 0x4c, 0x69, 0x73,
@@ -137,19 +197,21 @@ func file_dev_unmango_v1alpha1_versions_proto_rawDescGZIP() []byte {
 	return file_dev_unmango_v1alpha1_versions_proto_rawDescData
 }
 
-var file_dev_unmango_v1alpha1_versions_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_dev_unmango_v1alpha1_versions_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_dev_unmango_v1alpha1_versions_proto_goTypes = []any{
-	(*ListRequest)(nil),  // 0: dev.unmango.v1alpha1.ListRequest
-	(*ListResponse)(nil), // 1: dev.unmango.v1alpha1.ListResponse
+	(*Version)(nil),      // 0: dev.unmango.v1alpha1.Version
+	(*ListRequest)(nil),  // 1: dev.unmango.v1alpha1.ListRequest
+	(*ListResponse)(nil), // 2: dev.unmango.v1alpha1.ListResponse
 }
 var file_dev_unmango_v1alpha1_versions_proto_depIdxs = []int32{
-	0, // 0: dev.unmango.v1alpha1.VersionsService.List:input_type -> dev.unmango.v1alpha1.ListRequest
-	1, // 1: dev.unmango.v1alpha1.VersionsService.List:output_type -> dev.unmango.v1alpha1.ListResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: dev.unmango.v1alpha1.ListResponse.versions:type_name -> dev.unmango.v1alpha1.Version
+	1, // 1: dev.unmango.v1alpha1.VersionsService.List:input_type -> dev.unmango.v1alpha1.ListRequest
+	2, // 2: dev.unmango.v1alpha1.VersionsService.List:output_type -> dev.unmango.v1alpha1.ListResponse
+	2, // [2:3] is the sub-list for method output_type
+	1, // [1:2] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_dev_unmango_v1alpha1_versions_proto_init() }
@@ -163,7 +225,7 @@ func file_dev_unmango_v1alpha1_versions_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_dev_unmango_v1alpha1_versions_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
