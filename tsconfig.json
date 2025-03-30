@@ -1,4 +1,7 @@
 {
+  "exclude": [
+    "./src/**/*.d.ts"
+  ],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",

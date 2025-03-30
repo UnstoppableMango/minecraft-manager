@@ -17,19 +17,5 @@ plugins:
     opt:
       - paths=source_relative
 
-  - remote: buf.build/grpc/web:v1.5.0
+  - remote: buf.build/community/timostamm-protobuf-ts:v2.9.6
     out: src
-    opt:
-      - mode=grpcweb
-      - import_style=typescript
-
-  - remote: buf.build/protocolbuffers/js:v3.21.4
-    out: src
-    opt:
-      - import_style=commonjs,binary
-
-  # - remote: buf.build/bufbuild/es:v2.2.0
-  #   out: src
-  #   opt:
-  #     - target=ts
-  #     - import_extension=none # https://github.com/connectrpc/connect-es/issues/1049
