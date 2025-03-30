@@ -11,7 +11,7 @@
     "build": "bun run build.ts"
   },
   "dependencies": {
-    "bun-plugin-tailwind": "^0.0.14",
+    "bun-plugin-tailwind": "^0.0.15",
     "react": "^19",
     "react-dom": "^19",
     "tailwindcss": "^4.0.6"
