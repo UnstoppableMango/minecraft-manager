@@ -34,10 +34,10 @@ CHART_SRC := $(wildcard charts/${PROJECT}/*) $(wildcard charts/${PROJECT}/templa
 
 test: .make/bun-test
 
-dev:
+dev: | .make/bun-install
 	$(BUN) dev
 
-start:
+start: | .make/bun-install
 	$(BUN) run start
 
 build: dist/index.html bin/api
@@ -99,7 +99,7 @@ bin/kubectl: .versions/kubernetes
 	$(BUF) generate
 	@touch $@
 
-.make/bun-test: bun.lock ${TS_SRC} | bin/bun
+.make/bun-test: bun.lock ${TS_SRC} | bin/bun .make/bun-install
 	$(BUN) test
 	@touch $@
 
