@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net"
 
 	"github.com/UnstoppableMango/minecraft-manager/api"
@@ -23,6 +24,7 @@ func main() {
 
 	reflection.Register(server)
 
+	fmt.Println("Serving localhost:6969")
 	if err := server.Serve(lis); err != nil {
 		cli.Fail(err)
 	}

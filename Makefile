@@ -40,7 +40,8 @@ dev:
 start:
 	$(BUN) run start
 
-build: dist/index.html
+build: dist/index.html bin/api
+api: bin/api
 gen: .make/buf-generate
 lint: .make/ct-lint
 docker: .make/docker-build-web .make/docker-build-api
@@ -57,11 +58,14 @@ down: .make/kind-delete
 clean: down
 	rm -rf dist .make
 
-tidy: $(GO_SRC)
+tidy: go.mod $(GO_SRC)
 	go mod tidy
 
 dist/index.html: | bin/bun
 	$(BUN) run build
+
+bin/api: go.mod go.sum ${GO_SRC}
+	go build -o $@ ./
 
 bin/bun: .versions/bun | .make/install-bun.sh
 	BUN_INSTALL=${CURDIR} ${CURDIR}/.make/install-bun.sh bun-$(shell $(DEVCTL) $<)
