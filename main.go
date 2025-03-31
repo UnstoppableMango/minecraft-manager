@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/UnstoppableMango/minecraft-manager/api"
-	unmangov1alpha1 "github.com/UnstoppableMango/minecraft-manager/api/dev/unmango/v1alpha1"
 	"github.com/unmango/go/cli"
+	"github.com/unstoppablemango/minecraft-manager/api"
+	unmangov1alpha1 "github.com/unstoppablemango/minecraft-manager/api/dev/unmango/v1alpha1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

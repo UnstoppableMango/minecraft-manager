@@ -1,4 +1,4 @@
-module github.com/UnstoppableMango/minecraft-manager
+module github.com/unstoppablemango/minecraft-manager
 
 go 1.24.1
 

@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 
-	unmangov1alpha1 "github.com/UnstoppableMango/minecraft-manager/api/dev/unmango/v1alpha1"
+	unmangov1alpha1 "github.com/unstoppablemango/minecraft-manager/api/dev/unmango/v1alpha1"
 )
 
 type versionsServer struct {
