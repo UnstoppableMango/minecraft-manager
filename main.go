@@ -4,13 +4,26 @@ import (
 	"fmt"
 	"net/http"
 
+	connectcors "connectrpc.com/cors"
 	"connectrpc.com/grpcreflect"
+	"github.com/rs/cors"
 	"github.com/unmango/go/cli"
 	"github.com/unstoppablemango/minecraft-manager/api"
 	"github.com/unstoppablemango/minecraft-manager/api/dev/unmango/v1alpha1/unmangov1alpha1connect"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )
+
+func withCORS(h http.Handler) http.Handler {
+	middleware := cors.New(cors.Options{
+		AllowedOrigins: []string{"localhost:3000"},
+		AllowedMethods: connectcors.AllowedMethods(),
+		AllowedHeaders: connectcors.AllowedHeaders(),
+		ExposedHeaders: connectcors.ExposedHeaders(),
+	})
+
+	return middleware.Handler(h)
+}
 
 func main() {
 	path, handler := unmangov1alpha1connect.NewVersionsServiceHandler(
@@ -29,7 +42,7 @@ func main() {
 	server := h2c.NewHandler(mux, &http2.Server{})
 
 	fmt.Println("Serving", addr)
-	if err := http.ListenAndServe(addr, server); err != nil {
+	if err := http.ListenAndServe(addr, withCORS(server)); err != nil {
 		cli.Fail(err)
 	}
 }
