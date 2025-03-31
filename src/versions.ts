@@ -1,3 +1,6 @@
+import { VersionsServiceClient } from "./dev/unmango/v1alpha1/versions.client";
+import { GrpcWebFetchTransport, GrpcWebOptions } from "@protobuf-ts/grpcweb-transport";
+
 export interface Version {
   semver: string;
   date: Date;
@@ -108,4 +111,9 @@ export function listVersions(): Promise<McVersionsNet> {
 
 export function getDownloadUrl(v: Version): Promise<string> {
   return getOrCache(v.href, () => resolveHref(v.href));
+}
+
+export function createClient(options: GrpcWebOptions): VersionsServiceClient {
+  const transport = new GrpcWebFetchTransport(options);
+  return new VersionsServiceClient(transport);
 }
