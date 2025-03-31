@@ -3,23 +3,27 @@ package api
 import (
 	"context"
 
+	"connectrpc.com/connect"
 	unmangov1alpha1 "github.com/unstoppablemango/minecraft-manager/api/dev/unmango/v1alpha1"
+	"github.com/unstoppablemango/minecraft-manager/api/dev/unmango/v1alpha1/unmangov1alpha1connect"
 )
 
-type versionsServer struct {
-	unmangov1alpha1.UnimplementedVersionsServiceServer
-}
+type versionsServer struct{}
 
-func NewVersionServer() unmangov1alpha1.VersionsServiceServer {
+func NewVersionsServer() unmangov1alpha1connect.VersionsServiceHandler {
 	return &versionsServer{}
 }
 
-func (s *versionsServer) List(ctx context.Context, req *unmangov1alpha1.ListRequest) (*unmangov1alpha1.ListResponse, error) {
-	res := &unmangov1alpha1.ListResponse{
+// List implements unmangov1alpha1connect.VersionsServiceHandler.
+func (v *versionsServer) List(
+	ctx context.Context,
+	req *connect.Request[unmangov1alpha1.ListRequest],
+) (*connect.Response[unmangov1alpha1.ListResponse], error) {
+	res := connect.NewResponse(&unmangov1alpha1.ListResponse{
 		Versions: []*unmangov1alpha1.Version{{
 			Version: "TEST",
 		}},
-	}
+	})
 
 	return res, nil
 }
