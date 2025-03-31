@@ -11,6 +11,8 @@
     "build": "bun run build.ts"
   },
   "dependencies": {
+    "@protobuf-ts/runtime": "^2.9.6",
+    "@protobuf-ts/runtime-rpc": "^2.9.6",
     "bun-plugin-tailwind": "^0.0.15",
     "react": "^19",
     "react-dom": "^19",

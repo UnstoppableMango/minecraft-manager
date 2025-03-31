@@ -1,0 +1,23 @@
+version: v2
+
+managed:
+  enabled: true
+  override:
+    - file_option: go_package_prefix
+      value: github.com/unstoppablemango/minecraft-manager
+
+plugins:
+  - remote: buf.build/grpc/go:v1.5.1
+    out: api
+    opt:
+      - paths=source_relative
+
+  - remote: buf.build/protocolbuffers/go:v1.35.1
+    out: api
+    opt:
+      - paths=source_relative
+
+  - remote: buf.build/community/timostamm-protobuf-ts:v2.9.6
+    out: src
+    opt:
+      - optimize_code_size
