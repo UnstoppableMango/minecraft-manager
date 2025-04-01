@@ -116,7 +116,7 @@ export function getDownloadUrl(v: Version): Promise<string> {
 
 export function createVersionsClient(): Client<typeof VersionsService> {
   const transport = createConnectTransport({
-    baseUrl: 'localhost:6969',
+    baseUrl: 'http://localhost:6969',
   });
 
   return createClient(VersionsService, transport);

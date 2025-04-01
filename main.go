@@ -16,7 +16,7 @@ import (
 
 func withCORS(h http.Handler) http.Handler {
 	middleware := cors.New(cors.Options{
-		AllowedOrigins: []string{"localhost:3000"},
+		AllowedOrigins: []string{"http://localhost:3000"},
 		AllowedMethods: connectcors.AllowedMethods(),
 		AllowedHeaders: connectcors.AllowedHeaders(),
 		ExposedHeaders: connectcors.ExposedHeaders(),
@@ -26,7 +26,7 @@ func withCORS(h http.Handler) http.Handler {
 }
 
 func main() {
-	path, handler := unmangov1alpha1connect.NewVersionsServiceHandler(
+	path, versionService := unmangov1alpha1connect.NewVersionsServiceHandler(
 		api.NewVersionsServer(),
 	)
 	reflector := grpcreflect.NewStaticReflector(
@@ -34,15 +34,15 @@ func main() {
 	)
 
 	mux := http.NewServeMux()
-	mux.Handle(path, handler)
+	mux.Handle(path, versionService)
 	mux.Handle(grpcreflect.NewHandlerV1(reflector))
 	mux.Handle(grpcreflect.NewHandlerV1Alpha(reflector))
 
 	addr := "localhost:6969"
-	server := h2c.NewHandler(mux, &http2.Server{})
+	server := h2c.NewHandler(withCORS(mux), &http2.Server{})
 
 	fmt.Println("Serving", addr)
-	if err := http.ListenAndServe(addr, withCORS(server)); err != nil {
+	if err := http.ListenAndServe(addr, server); err != nil {
 		cli.Fail(err)
 	}
 }
