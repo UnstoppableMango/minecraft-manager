@@ -1,8 +1,6 @@
 import "./index.css";
 import { JSX, useEffect, useState } from 'react';
-import { createVersionsClient, emptyMcVersionsNet, listVersions, McVersionsNet } from './versions';
-
-const client = createVersionsClient();
+import { emptyMcVersionsNet, listVersions, McVersionsNet } from './versions';
 
 export function App(): JSX.Element {
   const [loading, setLoading] = useState(true);
@@ -16,10 +14,6 @@ export function App(): JSX.Element {
         .then(() => setLoading(false))
         .catch(setError)
     }
-  }, []);
-
-  useEffect(() => {
-    client.list({}).then((x) => console.log(x.versions)).catch((e) => console.error(e));
   }, []);
 
   if (error) {
