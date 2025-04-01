@@ -32,19 +32,16 @@ TS_SRC    != $(DEVCTL) list --ts
 PROTO_SRC != $(DEVCTL) list --proto
 CHART_SRC := $(wildcard charts/${PROJECT}/*) $(wildcard charts/${PROJECT}/templates/*)
 
-test: .make/bun-test
-
-dev: | .make/bun-install
-	$(BUN) dev
-
-start: | .make/bun-install
-	$(BUN) run start
-
 build: dist/index.html bin/api
+test: .make/bun-test
 api: bin/api
 gen: .make/buf-generate
 lint: .make/ct-lint
 docker: .make/docker-build-web .make/docker-build-api
+
+start: dist/index.html
+	go run ./
+
 dev-cluster: ${KUBECONFIG} .make/kind-load-web .make/kind-load-api .make/shulker-install
 dev-container: .make/dev-container
 helm-template: .make/helm-template
@@ -61,8 +58,8 @@ clean: down
 tidy: go.mod $(GO_SRC)
 	go mod tidy
 
-dist/index.html: | bin/bun
-	$(BUN) run build
+dist/index.html: | bin/bun .make/bun-install
+	$(BUN) run build ./public/index.html --outdir dist
 
 bin/api: go.mod go.sum ${GO_SRC}
 	go build -o $@ ./

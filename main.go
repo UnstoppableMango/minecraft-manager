@@ -26,6 +26,8 @@ func withCORS(h http.Handler) http.Handler {
 }
 
 func main() {
+	web := http.FileServer(http.Dir("./dist"))
+
 	path, versionService := unmangov1alpha1connect.NewVersionsServiceHandler(
 		api.NewVersionsServer(),
 	)
@@ -34,6 +36,7 @@ func main() {
 	)
 
 	mux := http.NewServeMux()
+	mux.Handle("/", web)
 	mux.Handle(path, versionService)
 	mux.Handle(grpcreflect.NewHandlerV1(reflector))
 	mux.Handle(grpcreflect.NewHandlerV1Alpha(reflector))
