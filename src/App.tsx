@@ -27,9 +27,9 @@ export function App(): JSX.Element {
       <div className="mx-auto w-1/2 h-1/3 p-2 rounded-md bg-green-700">
         <label htmlFor="versions" className='p-2'>Versions</label>
         <select name="versions" className='p-1 rounded-md bg-gray-800'>
-          {versions.stable.map(v => (
+          {versions.stable.filter((x) => !!x.semver).map(v => (
             <option key={v.semver} value={v.semver} className='p-3'>
-              <span>{v.semver} {v.date.toLocaleDateString()}</span>
+              {v.semver} {v.date.toLocaleDateString()}
             </option>
           ))}
         </select>

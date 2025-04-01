@@ -1,3 +1,7 @@
+import { Client, createClient } from "@connectrpc/connect";
+import { createConnectTransport } from "@connectrpc/connect-web";
+import { VersionsService } from "./dev/unmango/v1alpha1/versions_pb";
+
 export interface Version {
   semver: string;
   date: Date;
@@ -108,4 +112,12 @@ export function listVersions(): Promise<McVersionsNet> {
 
 export function getDownloadUrl(v: Version): Promise<string> {
   return getOrCache(v.href, () => resolveHref(v.href));
+}
+
+export function createVersionsClient(): Client<typeof VersionsService> {
+  const transport = createConnectTransport({
+    baseUrl: 'http://localhost:6969',
+  });
+
+  return createClient(VersionsService, transport);
 }

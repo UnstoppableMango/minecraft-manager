@@ -11,6 +11,9 @@
     "build": "bun run build.ts"
   },
   "dependencies": {
+    "@bufbuild/protobuf": "^2.2.5",
+    "@connectrpc/connect": "^2.0.2",
+    "@connectrpc/connect-web": "^2.0.2",
     "@protobuf-ts/runtime": "^2.9.6",
     "@protobuf-ts/runtime-rpc": "^2.9.6",
     "bun-plugin-tailwind": "^0.0.15",
