@@ -15,13 +15,14 @@ DOCKER := docker
 DRUN := $(DOCKER) run --rm -it --network host \
 	--workdir=/data --volume ${CURDIR}:/data
 
-DEVCTL  := go tool devctl
-BUF     := go tool buf
-BUN     := ${LOCAL_BIN}/bun
-CT      := $(DRUN) -e KUBECONFIG=.make/kind-cluster quay.io/helmpack/chart-testing:$(shell $(DEVCTL) v chart-testing --prefixed) ct
-HELM    := go tool helm
-KIND    := go tool kind
-KUBECTL := ${LOCAL_BIN}/kubectl
+DEVCTL    := go tool devctl
+BUF       := go tool buf
+BUN       := ${LOCAL_BIN}/bun
+CT        := $(DRUN) -e KUBECONFIG=.make/kind-cluster quay.io/helmpack/chart-testing:$(shell $(DEVCTL) v chart-testing --prefixed) ct
+HELM      := go tool helm
+KIND      := go tool kind
+KUBECTL   := ${LOCAL_BIN}/kubectl
+WATCHEXEC := ${LOCALBIN}/watchexec
 
 export GOBIN      := ${LOCAL_BIN}
 export KUBECONFIG := .make/kind-cluster
@@ -38,7 +39,7 @@ gen: .make/buf-generate
 lint: .make/ct-lint
 docker: .make/docker-build
 
-start: start.ts | bin/bun
+start: start.ts | bin/bun bin/watchexec
 	$(BUN) $<
 
 dev-cluster: ${KUBECONFIG} .make/kind-load .make/shulker-install
@@ -70,6 +71,9 @@ bin/bun: .versions/bun | .make/install-bun.sh
 bin/kubectl: .versions/kubernetes
 	curl -Lo $@ "https://dl.k8s.io/release/$(shell $(DEVCTL) $<)/bin/$(shell go env GOOS)/$(shell go env GOARCH)/kubectl"
 	chmod +x $@
+
+bin/watchexec: | .make/watchexec/watchexec
+	ln -s ${CURDIR}/$| ${CURDIR}/$@
 
 .ct/chart_schema.yaml: .versions/chart-testing
 	curl -Lo $@ https://raw.githubusercontent.com/helm/chart-testing/refs/tags/$(shell $(DEVCTL) $<)/etc/chart_schema.yaml
@@ -171,3 +175,14 @@ bin/kubectl: .versions/kubernetes
 .make/shulker-uninstall:
 	$(HELM) uninstall --namespace ${SHULKER_NS} --ignore-not-found ${SHULKER_RELEASE}
 	rm -f .make/shulker-install
+
+.make/watchexec/watchexec: .make/watchexec.tar.xz
+	mkdir -p $(dir $@) && tar -C $(dir $@) -xvf $< --strip-components=1
+	@touch $@
+
+.make/watchexec.tar.xz: .versions/watchexec
+ifeq ($(shell go env GOOS),darwin)
+	curl -Lo $@ https://github.com/watchexec/watchexec/releases/download/$(shell $(DEVCTL) $<)/watchexec-$(shell $(DEVCTL) v watchexec)-aarch64-apple-darwin.tar.xz
+else
+	curl -Lo $@ https://github.com/watchexec/watchexec/releases/download/$(shell $(DEVCTL) $<)/watchexec-$(shell $(DEVCTL) v watchexec)-x86_64-unknown-linux-gnu.tar.xz
+endif
