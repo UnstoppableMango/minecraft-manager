@@ -13,9 +13,8 @@ tool (
 
 require (
 	connectrpc.com/connect v1.18.1
-	connectrpc.com/cors v0.1.0
 	connectrpc.com/grpcreflect v1.3.0
-	github.com/rs/cors v1.11.1
+	github.com/charmbracelet/log v0.4.1
 	github.com/unmango/go v0.3.0
 	golang.org/x/net v0.37.0
 	google.golang.org/protobuf v1.36.5
@@ -59,7 +58,6 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/chai2010/gettext-go v1.0.2 // indirect
 	github.com/charmbracelet/lipgloss v1.0.0 // indirect
-	github.com/charmbracelet/log v0.4.1 // indirect
 	github.com/charmbracelet/x/ansi v0.8.0 // indirect
 	github.com/cncf/xds/go v0.0.0-20240905190251-b4127c9b8d78 // indirect
 	github.com/containerd/containerd v1.7.24 // indirect
@@ -179,6 +177,7 @@ require (
 	github.com/quic-go/qpack v0.5.1 // indirect
 	github.com/quic-go/quic-go v0.50.1 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
+	github.com/rs/cors v1.11.1 // indirect
 	github.com/rubenv/sql-migrate v1.7.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
