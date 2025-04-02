@@ -57,7 +57,7 @@ clean: down
 tidy: go.mod $(GO_SRC)
 	go mod tidy
 
-dist/index.html: | bin/bun .make/bun-install
+dist/index.html: public/index.html ${TS_SRC} | bin/bun .make/bun-install
 	$(BUN) build ./public/index.html --outdir dist
 
 bin/app: go.mod go.sum ${GO_SRC}
