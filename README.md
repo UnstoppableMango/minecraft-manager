@@ -16,7 +16,7 @@
 
 [DockerHub](https://hub.docker.com/r/unstoppablemango/minecraft-manager)
 
-`docker run --rm -p 3000:3000 unstoppablemango/minecraft-manager:main`
+`docker run --rm -p 6969:6969 unstoppablemango/minecraft-manager:main`
 
 ### Helm
 

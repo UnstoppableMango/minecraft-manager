@@ -9,8 +9,8 @@ spec:
       command: [bash, -c, 'bun install && bun dev']
       workingDir: /src
       ports:
-        - containerPort: 3000
-          hostPort: 3000
+        - containerPort: 6969
+          hostPort: 6969
           name: http
       volumeMounts:
         - mountPath: /src
