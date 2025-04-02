@@ -107,7 +107,7 @@ bin/kubectl: .versions/kubernetes
 	cat $< | WORKING_DIR=${CURDIR} envsubst > $@
 
 .make/kind-cluster: .versions/kubernetes | .make/kind-config.yaml
-	$(KIND) export kubeconfig --kubeconfig .make/kind-config.yaml || \
+	$(KIND) export kubeconfig --name ${PROJECT} || \
 	$(KIND) create cluster \
 	--name ${PROJECT} \
 	--image kindest/node:$(shell $(DEVCTL) $<) \
@@ -128,7 +128,7 @@ bin/kubectl: .versions/kubernetes
 .make/helm-template: ${CHART_SRC}
 	$(HELM) template ${CURDIR}/charts/${PROJECT} > $@
 
-.make/helm-install: ${CHART_SRC} | .make/kind-load-web .make/kind-load-api
+.make/helm-install: ${CHART_SRC} | .make/kind-load
 	$(HELM) install test ./charts/${PROJECT} -f ./charts/${PROJECT}/ci/kind-values.yaml
 	@touch $@
 
@@ -141,7 +141,7 @@ bin/kubectl: .versions/kubernetes
 	$(CT) lint
 	@touch $@
 
-.make/ct-install: .ct/chart_schema.yaml .ct/lintconf.yaml ${CHART_SRC} | .make/kind-load-web .make/kind-load-api
+.make/ct-install: .ct/chart_schema.yaml .ct/lintconf.yaml ${CHART_SRC} | .make/kind-load
 	$(CT) install --helm-extra-args '--timeout 30s'
 
 .make/${SHULKER_NS}:
