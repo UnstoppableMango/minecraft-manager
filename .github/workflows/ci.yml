@@ -120,12 +120,12 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         with:
           cache-from: type=gha
-          tags: ${{ github.repository }}:0.0.1-alpha
+          tags: minecraft-manager:0.0.1-alpha
           load: true
 
       - name: Load image into kind
         if: steps.list-changed.outputs.changed == 'true'
-        run: kind load docker-image ${{ github.repository }}:0.0.1-alpha --name ${{ env.CLUSTER_NAME }}
+        run: kind load docker-image minecraft-manager:0.0.1-alpha --name ${{ env.CLUSTER_NAME }}
 
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
