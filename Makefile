@@ -31,9 +31,9 @@ TS_SRC    != $(DEVCTL) list --ts
 PROTO_SRC != $(DEVCTL) list --proto
 CHART_SRC := $(wildcard charts/${PROJECT}/*) $(wildcard charts/${PROJECT}/templates/*)
 
-build: dist/index.html bin/api
+build: dist/index.html bin/app
 test: .make/bun-test
-api: bin/api
+api: bin/app
 gen: .make/buf-generate
 lint: .make/ct-lint
 docker: .make/docker-build
