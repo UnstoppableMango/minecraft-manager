@@ -38,8 +38,8 @@ gen: .make/buf-generate
 lint: .make/ct-lint
 docker: .make/docker-build
 
-start: dist/index.html
-	go run ./
+start: start.ts | bin/bun
+	$(BUN) $<
 
 dev-cluster: ${KUBECONFIG} .make/kind-load .make/shulker-install
 dev-container: .make/dev-container
@@ -58,7 +58,7 @@ tidy: go.mod $(GO_SRC)
 	go mod tidy
 
 dist/index.html: public/index.html ${TS_SRC} | bin/bun .make/bun-install
-	$(BUN) build ./public/index.html --outdir dist
+	$(BUN) build $< --outdir dist
 
 bin/app: go.mod go.sum ${GO_SRC}
 	go build -o $@ ./
