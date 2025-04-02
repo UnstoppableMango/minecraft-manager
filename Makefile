@@ -2,8 +2,7 @@ _ != mkdir -p .make bin
 
 PROJECT := minecraft-manager
 VERSION ?= 0.0.1-alpha
-WEB_IMG ?= ${PROJECT}-web:${VERSION}
-API_IMG ?= ${PROJECT}-api:${VERSION}
+IMG     ?= ${PROJECT}:${VERSION}
 
 AGONES_RELEASE  ?= agones
 AGONES_NS       ?= agones-system
@@ -37,12 +36,12 @@ test: .make/bun-test
 api: bin/api
 gen: .make/buf-generate
 lint: .make/ct-lint
-docker: .make/docker-build-web .make/docker-build-api
+docker: .make/docker-build
 
 start: dist/index.html
 	go run ./
 
-dev-cluster: ${KUBECONFIG} .make/kind-load-web .make/kind-load-api .make/shulker-install
+dev-cluster: ${KUBECONFIG} .make/kind-load .make/shulker-install
 dev-container: .make/dev-container
 helm-template: .make/helm-template
 helm-install: .make/helm-install
@@ -59,9 +58,9 @@ tidy: go.mod $(GO_SRC)
 	go mod tidy
 
 dist/index.html: | bin/bun .make/bun-install
-	$(BUN) run build ./public/index.html --outdir dist
+	$(BUN) build ./public/index.html --outdir dist
 
-bin/api: go.mod go.sum ${GO_SRC}
+bin/app: go.mod go.sum ${GO_SRC}
 	go build -o $@ ./
 
 bin/bun: .versions/bun | .make/install-bun.sh
@@ -81,12 +80,8 @@ bin/kubectl: .versions/kubernetes
 .envrc: hack/example.envrc
 	rm -f $@ && cp $< $@ && chmod u=r,g=,o= $@
 
-.make/docker-build-web: web.Dockerfile package.json bun.lock bunfig.toml ${TS_SRC}
-	$(DOCKER) build . -t ${WEB_IMG} -f $<
-	@touch $@
-
-.make/docker-build-api: api.Dockerfile go.mod go.sum ${GO_SRC}
-	$(DOCKER) build . -t ${API_IMG} -f $<
+.make/docker-build: Dockerfile go.mod go.sum ${GO_SRC} ${TS_SRC} public/index.html
+	$(DOCKER) build . -t ${IMG} -f $<
 	@touch $@
 
 .make/dev-container: hack/dev-container.yml .make/kind-cluster .make/shulker-install | bin/kubectl
@@ -112,7 +107,7 @@ bin/kubectl: .versions/kubernetes
 	cat $< | WORKING_DIR=${CURDIR} envsubst > $@
 
 .make/kind-cluster: .versions/kubernetes | .make/kind-config.yaml
-	$(KIND) get clusters | grep ${PROJECT} || \
+	$(KIND) export kubeconfig --kubeconfig .make/kind-config.yaml || \
 	$(KIND) create cluster \
 	--name ${PROJECT} \
 	--image kindest/node:$(shell $(DEVCTL) $<) \
@@ -123,12 +118,8 @@ bin/kubectl: .versions/kubernetes
 	$(KIND) delete cluster --name ${PROJECT} && \
 	rm -f ${KUBECONFIG}
 
-.make/kind-load-web: .make/kind-cluster .make/docker-build-web
-	$(KIND) load docker-image --name ${PROJECT} ${WEB_IMG}
-	@touch $@
-
-.make/kind-load-api: .make/kind-cluster .make/docker-build-api
-	$(KIND) load docker-image --name ${PROJECT} ${API_IMG}
+.make/kind-load: .make/kind-cluster .make/docker-build
+	$(KIND) load docker-image --name ${PROJECT} ${IMG}
 	@touch $@
 
 .make/minecraft-manager-0.1.0.tgz:

@@ -13,13 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version-file: .versions/bun
 
       - run: bun install --frozen-lockfile
-      - run: bun test
 
   build-api:
     name: Build and Test API
@@ -27,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
@@ -38,9 +37,6 @@ jobs:
   docker:
     name: Docker
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        app: [web, api]
     steps:
       - uses: docker/setup-buildx-action@v3
         with:
@@ -49,7 +45,7 @@ jobs:
       - uses: docker/metadata-action@v5
         id: meta
         with:
-          images: ${{ github.repository }}-${{ matrix.app }}
+          images: ${{ github.repository }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -66,7 +62,6 @@ jobs:
 
       - uses: docker/build-push-action@v6
         with:
-          file: ${{ matrix.app }}.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           cache-to: type=gha
@@ -125,12 +120,12 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         with:
           cache-from: type=gha
-          tags: minecraft-manager:0.0.1-alpha
+          tags: ${{ github.repository }}:0.0.1-alpha
           load: true
 
       - name: Load image into kind
         if: steps.list-changed.outputs.changed == 'true'
-        run: kind load docker-image minecraft-manager:0.0.1-alpha --name ${{ env.CLUSTER_NAME }}
+        run: kind load docker-image ${{ github.repository }}:0.0.1-alpha --name ${{ env.CLUSTER_NAME }}
 
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
