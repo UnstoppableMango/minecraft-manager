@@ -1,4 +1,4 @@
-import { Client, createClient } from "@connectrpc/connect";
+import { type Client, createClient } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
 import { VersionsService } from "./dev/unmango/v1alpha1/versions_pb";
 
@@ -57,7 +57,7 @@ async function getOrCache(key: string, fn: () => Promise<string>): Promise<strin
 function parseVersion(elem: Element): Version {
   const time = elem.querySelector('time');
   const download = elem.querySelector('a');
-  
+
   return {
     date: time ? new Date(time.dateTime) : new Date(),
     href: download?.href ?? '',
