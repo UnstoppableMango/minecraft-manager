@@ -1,10 +1,16 @@
 {
-  "name": "minecraft-manager",
-  "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+	"name": "minecraft-manager",
+	"private": true,
+	"dependencies": {
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0",
+		"tailwindcss": "^4.1.1"
+	},
+	"devDependencies": {
+		"@tailwindcss/cli": "^4.1.1",
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
 }

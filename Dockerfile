@@ -19,8 +19,9 @@ WORKDIR /app
 COPY package.json bun.lock ./
 RUN bun install --production --frozen-lockfile
 
-COPY public/ ./
-RUN bun build ./index.html --outdir dist
+COPY public/ ./public/
+COPY src/ ./src/
+RUN bun build ./public/index.html --outdir dist
 
 FROM scratch AS app
 COPY --from=api /usr/bin/app /usr/bin/
