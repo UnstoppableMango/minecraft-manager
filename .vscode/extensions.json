@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "tamasfe.even-better-toml",
+    "oven.bun-vscode",
+    "golang.go",
+    "mkhl.direnv",
+    "editorconfig.editorconfig",
+    "bradlc.vscode-tailwindcss"
+  ]
+}
