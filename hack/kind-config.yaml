@@ -6,5 +6,5 @@ nodes:
   - hostPath: $WORKING_DIR
     containerPath: /src
   extraPortMappings:
-  - hostPort: 6969
+  - hostPort: 3001
     containerPort: 6969

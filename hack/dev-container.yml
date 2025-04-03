@@ -10,7 +10,7 @@ spec:
       workingDir: /src
       ports:
         - containerPort: 6969
-          hostPort: 6969
+          hostPort: 3001
           name: http
       volumeMounts:
         - mountPath: /src
