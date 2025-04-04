@@ -1,14 +1,10 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { App } from './app';
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
 
-function start() {
-  const root = createRoot(document.getElementById('root')!);
-  root.render(<App />);
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', start);
-} else {
-  start();
-}
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
