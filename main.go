@@ -17,17 +17,15 @@ import (
 func main() {
 	mux := http.NewServeMux()
 	v, err := vite.NewHandler(vite.Config{
-		FS:       os.DirFS("./src"),
-		PublicFS: os.DirFS("./public"),
-		IsDev:    true,
-		ViteURL:  "http://localhost:5173",
+		FS:      os.DirFS("."),
+		IsDev:   true,
+		ViteURL: "http://localhost:5173",
 	})
 	if err != nil {
 		cli.Fail(err)
 	}
 
 	mux.Handle("/", v)
-	mux.Handle("/src/assets/", http.FileServer(http.Dir("./src/assets")))
 	mux.Handle(unmangov1alpha1connect.NewVersionsServiceHandler(
 		api.NewVersionsServer(),
 	))
@@ -41,7 +39,7 @@ func main() {
 	addr := ":6969"
 	server := h2c.NewHandler(mux, &http2.Server{})
 
-	log.Info("Serving", "addr", addr)
+	log.Infof("Listening on http://%s", addr)
 	if err := http.ListenAndServe(addr, server); err != nil {
 		cli.Fail(err)
 	}
