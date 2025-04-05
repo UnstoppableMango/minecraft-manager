@@ -1,6 +1,6 @@
 import { $ } from 'bun';
 
 await Promise.all([
-	$`bun run build --watch`,
-	$`go run ./`,
+	$`bin/bun run dev`,
+	$`bin/watchexec -e go -- go run ./`,
 ]);

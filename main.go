@@ -6,6 +6,7 @@ import (
 
 	"connectrpc.com/grpcreflect"
 	"github.com/charmbracelet/log"
+	"github.com/olivere/vite"
 	"github.com/unmango/go/cli"
 	"github.com/unstoppablemango/minecraft-manager/api"
 	"github.com/unstoppablemango/minecraft-manager/api/dev/unmango/v1alpha1/unmangov1alpha1connect"
@@ -15,16 +16,18 @@ import (
 
 func main() {
 	mux := http.NewServeMux()
-	www := os.Getenv("WWW_PATH")
-	if www == "" {
-		www = "/srv/www"
+	v, err := vite.NewHandler(vite.Config{
+		FS:       os.DirFS("./src"),
+		PublicFS: os.DirFS("./public"),
+		IsDev:    true,
+		ViteURL:  "http://localhost:5173",
+	})
+	if err != nil {
+		cli.Fail(err)
 	}
 
-	if f, err := os.Stat(www); err == nil && f.IsDir() {
-		log.Info("Serving files", "path", www)
-		mux.Handle("/", http.FileServer(http.Dir(www)))
-	}
-
+	mux.Handle("/", v)
+	mux.Handle("/src/assets/", http.FileServer(http.Dir("./src/assets")))
 	mux.Handle(unmangov1alpha1connect.NewVersionsServiceHandler(
 		api.NewVersionsServer(),
 	))
