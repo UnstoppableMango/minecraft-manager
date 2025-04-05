@@ -76,7 +76,7 @@ function parseVersions(elem: Element): Version[] {
 function toVersions(rawhtml: string): McVersionsNet {
   const html = new DOMParser().parseFromString(rawhtml, 'text/html');
 
-  const elems = html.querySelectorAll('h5').values()
+  const elems = [...html.querySelectorAll('h5').values()]
     .reduce<Record<keyof McVersionsNet, Element | null>>((acc, value) => {
       const list = value.nextElementSibling;
       const name = value.textContent;
