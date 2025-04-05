@@ -10,6 +10,7 @@ RUN go mod download
 
 COPY *.go .
 COPY api/ ./api/
+COPY env/ ./env/
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /usr/bin/app
 
 FROM oven/bun:1.2.7-slim AS web
@@ -17,11 +18,12 @@ FROM oven/bun:1.2.7-slim AS web
 WORKDIR /app
 
 COPY package.json bun.lock ./
-RUN bun install --production --frozen-lockfile
+RUN bun install --frozen-lockfile
 
 COPY public/ ./public/
 COPY src/ ./src/
-RUN bun build ./public/index.html --outdir dist
+COPY index.html vite.config.ts tsconfig.* ./
+RUN bun run build:prod
 
 FROM scratch AS app
 COPY --from=api /usr/bin/app /usr/bin/
