@@ -5,12 +5,12 @@ metadata:
 spec:
   containers:
     - name: dev
-      image: oven/bun:1.2.4-slim
-      command: [bash, -c, 'bun install && bun dev']
+      image: oven/bun:1.2.7-slim
+      command: [bash, -c, 'make bin/watchexec && bun install && bun start.ts']
       workingDir: /src
       ports:
         - containerPort: 6969
-          hostPort: 3001
+          hostPort: 6969
           name: http
       volumeMounts:
         - mountPath: /src
@@ -19,6 +19,12 @@ spec:
         limits:
           cpu: "1"
           memory: 1Gi
+      readinessProbe:
+        httpGet:
+          port: 6969
+      livenessProbe:
+        httpGet:
+          port: 6969
   volumes:
     - name: src
       hostPath:
