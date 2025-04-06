@@ -1,10 +1,19 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { createVersionsClient } from './versions';
+import { Version } from './dev/unmango/v1alpha1/versions_pb';
+
+const client = createVersionsClient();
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+	const [versions, setVersions] = useState<Version[]>([]);
+
+	useEffect(() => {
+		client.list({}).then((x) => setVersions(x.versions)).catch((e) => console.error(e));
+	}, []);
 
   return (
     <>
@@ -17,6 +26,7 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
+			<h2>{versions.map(x => x.version)}</h2>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
