@@ -19,6 +19,7 @@ jobs:
           bun-version-file: .versions/bun
 
       - run: bun install --frozen-lockfile
+      - run: bun run lint
 
   build-api:
     name: Build and Test API
