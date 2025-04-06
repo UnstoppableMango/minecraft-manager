@@ -1,55 +1,58 @@
 package main
 
 import (
+	"context"
+	"flag"
 	"net"
 	"net/http"
-	"os"
+	"path/filepath"
 
-	"connectrpc.com/grpcreflect"
 	"github.com/charmbracelet/log"
-	"github.com/olivere/vite"
 	"github.com/unmango/go/cli"
 	"github.com/unstoppablemango/minecraft-manager/api"
-	"github.com/unstoppablemango/minecraft-manager/api/dev/unmango/v1alpha1/unmangov1alpha1connect"
-	"github.com/unstoppablemango/minecraft-manager/env"
-	"golang.org/x/net/http2"
-	"golang.org/x/net/http2/h2c"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/client-go/util/homedir"
 )
 
 func main() {
-	vconf := vite.Config{
-		IsDev:   env.IsDev(),
-		ViteURL: "http://localhost:5173",
-	}
-	if env.IsDev() {
-		vconf.FS = os.DirFS(".")
+	var kubeconfig *string
+	if home := homedir.HomeDir(); home != "" {
+		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
 	} else {
-		vconf.FS = os.DirFS("/srv/www")
+		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
 	}
+	flag.Parse()
 
-	mux := http.NewServeMux()
-	if v, err := vite.NewHandler(vconf); err != nil {
+	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+	if err != nil {
 		cli.Fail(err)
-	} else {
-		mux.Handle("/", v)
 	}
 
-	mux.Handle(unmangov1alpha1connect.NewVersionsServiceHandler(
-		api.NewVersionsServer(),
-	))
+	client, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		cli.Fail(err)
+	}
 
-	reflector := grpcreflect.NewStaticReflector(
-		unmangov1alpha1connect.VersionsServiceName,
-	)
-	mux.Handle(grpcreflect.NewHandlerV1(reflector))
-	mux.Handle(grpcreflect.NewHandlerV1Alpha(reflector))
+	podList, err := client.CoreV1().
+		Pods("default").
+		List(context.Background(), v1.ListOptions{})
+	if err != nil {
+		cli.Fail(err)
+	}
+
+	log.Infof("Iterating pods")
+	for _, p := range podList.Items {
+		log.Infof("Got pod %s", p.Name)
+	}
 
 	lis, err := net.Listen("tcp", ":6969")
 	if err != nil {
 		cli.Fail(err)
 	}
 
-	server := h2c.NewHandler(mux, &http2.Server{})
+	server := api.NewHandler()
 	log.Infof("Listening on http://%s", lis.Addr())
 	if err := http.Serve(lis, server); err != nil {
 		cli.Fail(err)
