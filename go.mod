@@ -18,7 +18,7 @@ require (
 	github.com/olivere/vite v0.1.0
 	github.com/unmango/go v0.3.0
 	golang.org/x/net v0.38.0
-	google.golang.org/protobuf v1.36.5
+	google.golang.org/protobuf v1.36.6
 	k8s.io/apimachinery v0.32.3
 	k8s.io/client-go v0.32.3
 )
