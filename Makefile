@@ -36,7 +36,7 @@ build: dist/index.html bin/app
 test: .make/bun-test
 api: bin/app
 gen: .make/buf-generate
-lint: .make/ct-lint
+lint: .make/ct-lint .make/eslint
 docker: .make/docker-build
 
 start: start.ts | bin/bun bin/watchexec
@@ -143,6 +143,10 @@ bin/watchexec: | .make/watchexec/watchexec
 	[ -f .make/helm-install ] && \
 	$(HELM) uninstall test && \
 	rm -f .make/helm-install || true
+
+.make/eslint: ${TS_SRC} eslint.config.js | bin/bun
+	$(BUN) run lint
+	@touch $@
 
 .make/ct-lint: .ct/chart_schema.yaml .ct/lintconf.yaml ${CHART_SRC}
 	$(CT) lint
