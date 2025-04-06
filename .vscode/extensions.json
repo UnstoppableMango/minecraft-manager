@@ -5,6 +5,7 @@
     "golang.go",
     "mkhl.direnv",
     "editorconfig.editorconfig",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "dprint.dprint"
   ]
 }

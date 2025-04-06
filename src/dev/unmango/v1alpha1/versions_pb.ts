@@ -2,15 +2,17 @@
 // @generated from file dev/unmango/v1alpha1/versions.proto (package dev.unmango.v1alpha1, syntax proto3)
 /* eslint-disable */
 
+import type { Message } from "@bufbuild/protobuf";
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv1";
 import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv1";
-import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file dev/unmango/v1alpha1/versions.proto.
  */
 export const file_dev_unmango_v1alpha1_versions: GenFile = /*@__PURE__*/
-  fileDesc("CiNkZXYvdW5tYW5nby92MWFscGhhMS92ZXJzaW9ucy5wcm90bxIUZGV2LnVubWFuZ28udjFhbHBoYTEiGgoHVmVyc2lvbhIPCgd2ZXJzaW9uGAEgASgJIg0KC0xpc3RSZXF1ZXN0Ij8KDExpc3RSZXNwb25zZRIvCgh2ZXJzaW9ucxgBIAMoCzIdLmRldi51bm1hbmdvLnYxYWxwaGExLlZlcnNpb24yYAoPVmVyc2lvbnNTZXJ2aWNlEk0KBExpc3QSIS5kZXYudW5tYW5nby52MWFscGhhMS5MaXN0UmVxdWVzdBoiLmRldi51bm1hbmdvLnYxYWxwaGExLkxpc3RSZXNwb25zZULzAQoYY29tLmRldi51bm1hbmdvLnYxYWxwaGExQg1WZXJzaW9uc1Byb3RvUAFaVmdpdGh1Yi5jb20vdW5zdG9wcGFibGVtYW5nby9taW5lY3JhZnQtbWFuYWdlci9hcGkvZGV2L3VubWFuZ28vdjFhbHBoYTE7dW5tYW5nb3YxYWxwaGExogIDRFVYqgIURGV2LlVubWFuZ28uVjFhbHBoYTHKAhREZXZcVW5tYW5nb1xWMWFscGhhMeICIERldlxVbm1hbmdvXFYxYWxwaGExXEdQQk1ldGFkYXRh6gIWRGV2OjpVbm1hbmdvOjpWMWFscGhhMWIGcHJvdG8z");
+  fileDesc(
+    "CiNkZXYvdW5tYW5nby92MWFscGhhMS92ZXJzaW9ucy5wcm90bxIUZGV2LnVubWFuZ28udjFhbHBoYTEiGgoHVmVyc2lvbhIPCgd2ZXJzaW9uGAEgASgJIg0KC0xpc3RSZXF1ZXN0Ij8KDExpc3RSZXNwb25zZRIvCgh2ZXJzaW9ucxgBIAMoCzIdLmRldi51bm1hbmdvLnYxYWxwaGExLlZlcnNpb24yYAoPVmVyc2lvbnNTZXJ2aWNlEk0KBExpc3QSIS5kZXYudW5tYW5nby52MWFscGhhMS5MaXN0UmVxdWVzdBoiLmRldi51bm1hbmdvLnYxYWxwaGExLkxpc3RSZXNwb25zZULzAQoYY29tLmRldi51bm1hbmdvLnYxYWxwaGExQg1WZXJzaW9uc1Byb3RvUAFaVmdpdGh1Yi5jb20vdW5zdG9wcGFibGVtYW5nby9taW5lY3JhZnQtbWFuYWdlci9hcGkvZGV2L3VubWFuZ28vdjFhbHBoYTE7dW5tYW5nb3YxYWxwaGExogIDRFVYqgIURGV2LlVubWFuZ28uVjFhbHBoYTHKAhREZXZcVW5tYW5nb1xWMWFscGhhMeICIERldlxVbm1hbmdvXFYxYWxwaGExXEdQQk1ldGFkYXRh6gIWRGV2OjpVbm1hbmdvOjpWMWFscGhhMWIGcHJvdG8z",
+  );
 
 /**
  * @generated from message dev.unmango.v1alpha1.Version
@@ -32,8 +34,7 @@ export const VersionSchema: GenMessage<Version> = /*@__PURE__*/
 /**
  * @generated from message dev.unmango.v1alpha1.ListRequest
  */
-export type ListRequest = Message<"dev.unmango.v1alpha1.ListRequest"> & {
-};
+export type ListRequest = Message<"dev.unmango.v1alpha1.ListRequest"> & {};
 
 /**
  * Describes the message dev.unmango.v1alpha1.ListRequest.
@@ -70,7 +71,6 @@ export const VersionsService: GenService<{
     methodKind: "unary";
     input: typeof ListRequestSchema;
     output: typeof ListResponseSchema;
-  },
+  };
 }> = /*@__PURE__*/
   serviceDesc(file_dev_unmango_v1alpha1_versions, 0);
-

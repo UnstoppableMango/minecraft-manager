@@ -30,4 +30,4 @@ COPY --from=api /usr/bin/app /usr/bin/
 COPY --from=web /app/dist /srv/www
 
 EXPOSE 6969
-CMD [ "/usr/bin/app" ]
+CMD ["/usr/bin/app"]

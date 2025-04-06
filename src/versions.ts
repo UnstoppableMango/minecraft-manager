@@ -23,20 +23,20 @@ export const emptyMcVersionsNet: McVersionsNet = {
 };
 
 export function getMajor(v: Version): string | undefined {
-  return v.semver.split('.')[0];
+  return v.semver.split(".")[0];
 }
 
 export function getMinor(v: Version): string | undefined {
-  return v.semver.split('.')[1];
+  return v.semver.split(".")[1];
 }
 
 export function getPatch(v: Version): string | undefined {
-  return v.semver.split('.')[2];
+  return v.semver.split(".")[2];
 }
 
 function fetchMcVersions(): Promise<string> {
-  console.warn('fetching https://mcversions.net');
-  return fetch('https://mcversions.net').then(x => x.text())
+  console.warn("fetching https://mcversions.net");
+  return fetch("https://mcversions.net").then(x => x.text());
 }
 
 function resolveHref(href: string): Promise<string> {
@@ -45,7 +45,7 @@ function resolveHref(href: string): Promise<string> {
 }
 
 async function getOrCache(key: string, fn: () => Promise<string>): Promise<string> {
-  let value = localStorage.getItem(key)
+  let value = localStorage.getItem(key);
   if (!value) {
     value = await fn();
     localStorage.setItem(key, value);
@@ -55,28 +55,28 @@ async function getOrCache(key: string, fn: () => Promise<string>): Promise<strin
 }
 
 function parseVersion(elem: Element): Version {
-  const time = elem.querySelector('time');
-  const download = elem.querySelector('a');
+  const time = elem.querySelector("time");
+  const download = elem.querySelector("a");
 
   return {
     date: time ? new Date(time.dateTime) : new Date(),
-    href: download?.href ?? '',
+    href: download?.href ?? "",
     semver: elem.id,
   };
 }
 
 function parseVersions(elem: Element): Version[] {
-  if (!elem.classList.contains('items')) {
-    console.warn('expected element to have the "items" class, version parsing may fail');
+  if (!elem.classList.contains("items")) {
+    console.warn("expected element to have the \"items\" class, version parsing may fail");
   }
 
   return Array.from(elem.children).map(parseVersion);
 }
 
 function toVersions(rawhtml: string): McVersionsNet {
-  const html = new DOMParser().parseFromString(rawhtml, 'text/html');
+  const html = new DOMParser().parseFromString(rawhtml, "text/html");
 
-  const elems = [...html.querySelectorAll('h5').values()]
+  const elems = [...html.querySelectorAll("h5").values()]
     .reduce<Record<keyof McVersionsNet, Element | null>>((acc, value) => {
       const list = value.nextElementSibling;
       const name = value.textContent;
@@ -101,12 +101,12 @@ function toVersions(rawhtml: string): McVersionsNet {
     alpha: elems.alpha ? parseVersions(elems.alpha) : [],
     beta: elems.beta ? parseVersions(elems.beta) : [],
     snapshot: elems.snapshot ? parseVersions(elems.snapshot) : [],
-    stable: elems.stable ? parseVersions(elems.stable) : []
+    stable: elems.stable ? parseVersions(elems.stable) : [],
   };
 }
 
 export function listVersions(): Promise<McVersionsNet> {
-  return getOrCache('mcversions.net', fetchMcVersions)
+  return getOrCache("mcversions.net", fetchMcVersions)
     .then(toVersions);
 }
 
@@ -116,7 +116,7 @@ export function getDownloadUrl(v: Version): Promise<string> {
 
 export function createVersionsClient(): Client<typeof VersionsService> {
   const transport = createConnectTransport({
-    baseUrl: 'http://localhost:6969',
+    baseUrl: "http://localhost:6969",
   });
 
   return createClient(VersionsService, transport);

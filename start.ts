@@ -1,6 +1,6 @@
-import { $ } from 'bun';
+import { $ } from "bun";
 
 await Promise.any([
-	$`bin/watchexec -e go -- go run ./`,
-	$`bin/bun run dev`,
+  $`bin/watchexec -e go -- go run ./`,
+  $`bin/bun run dev`,
 ]);
