@@ -16,6 +16,7 @@ DRUN := $(DOCKER) run --rm -it --network host \
 	--workdir=/data --volume ${CURDIR}:/data
 
 DEVCTL    := go tool devctl
+DPRINT    := ${LOCAL_BIN}/dprint
 BUF       := go tool buf
 BUN       := ${LOCAL_BIN}/bun
 CT        := $(DRUN) -e KUBECONFIG=.make/kind-cluster quay.io/helmpack/chart-testing:$(shell $(DEVCTL) v chart-testing --prefixed) ct
@@ -37,6 +38,7 @@ test: .make/bun-test
 api: bin/app
 gen: .make/buf-generate
 lint: .make/ct-lint .make/eslint
+fmt: .make/dprint-fmt
 docker: .make/docker-build
 
 start: start.ts | bin/bun bin/watchexec
@@ -63,6 +65,10 @@ dist/index.html: ${TS_SRC} | bin/bun .make/bun-install
 
 bin/app: go.mod go.sum ${GO_SRC}
 	go build -o $@ ./
+
+bin/dprint: .versions/dprint | .make/dprint/install.sh
+	DPRINT_INSTALL=${CURDIR} $| $(shell $(DEVCTL) v dprint)
+	@touch $@
 
 bin/bun: .versions/bun | .make/install-bun.sh
 	BUN_INSTALL=${CURDIR} ${CURDIR}/.make/install-bun.sh bun-$(shell $(DEVCTL) $<)
@@ -147,6 +153,14 @@ bin/watchexec: | .make/watchexec/watchexec
 .make/eslint: ${TS_SRC} eslint.config.js | bin/bun
 	$(BUN) run lint
 	@touch $@
+
+.make/dprint/install.sh:
+	@mkdir -p $(dir $@)
+	curl -fsSL https://dprint.dev/install.sh -o $@
+	@chmod +x $@
+
+.make/dprint-fmt: | bin/dprint
+	$(DPRINT) fmt
 
 .make/ct-lint: .ct/chart_schema.yaml .ct/lintconf.yaml ${CHART_SRC}
 	$(CT) lint
