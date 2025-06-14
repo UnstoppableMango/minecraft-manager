@@ -13,7 +13,7 @@ COPY api/ ./api/
 COPY env/ ./env/
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /usr/bin/app
 
-FROM oven/bun:1.2.8-slim AS web
+FROM oven/bun:1.2.16-slim AS web
 
 WORKDIR /app
 
