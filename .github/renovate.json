@@ -11,8 +11,8 @@
 	"customManagers": [
 		{
 			"customType": "regex",
-			"fileMatch": [
-				".versions/bun"
+			"managerFilePatterns": [
+				"/.versions/bun/"
 			],
 			"matchStrings": [
 				"(?<currentValue>\\S+)"
@@ -23,8 +23,8 @@
 		},
 		{
 			"customType": "regex",
-			"fileMatch": [
-				".versions/chart-testing"
+			"managerFilePatterns": [
+				"/.versions/chart-testing/"
 			],
 			"matchStrings": [
 				"(?<currentValue>\\S+)"
@@ -35,8 +35,8 @@
 		},
 		{
 			"customType": "regex",
-			"fileMatch": [
-				".versions/devctl"
+			"managerFilePatterns": [
+				"/.versions/devctl/"
 			],
 			"matchStrings": [
 				"(?<currentValue>\\S+)"
@@ -47,8 +47,8 @@
 		},
 		{
 			"customType": "regex",
-			"fileMatch": [
-				".versions/helm"
+			"managerFilePatterns": [
+				"/.versions/helm/"
 			],
 			"matchStrings": [
 				"(?<currentValue>\\S+)"
@@ -59,8 +59,8 @@
 		},
 		{
 			"customType": "regex",
-			"fileMatch": [
-				".versions/kind"
+			"managerFilePatterns": [
+				"/.versions/kind/"
 			],
 			"matchStrings": [
 				"(?<currentValue>\\S+)"
