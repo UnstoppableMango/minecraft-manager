@@ -16,7 +16,7 @@ require (
 	connectrpc.com/grpcreflect v1.3.0
 	github.com/charmbracelet/log v0.4.2
 	github.com/olivere/vite v0.1.0
-	github.com/unmango/go v0.3.0
+	github.com/unmango/go v0.4.1
 	golang.org/x/net v0.41.0
 	google.golang.org/protobuf v1.36.6
 	k8s.io/apimachinery v0.33.1
