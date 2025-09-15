@@ -20,7 +20,7 @@ require (
 	github.com/olivere/vite v0.1.0
 	github.com/unmango/go v0.5.1
 	golang.org/x/net v0.44.0
-	google.golang.org/protobuf v1.36.6
+	google.golang.org/protobuf v1.36.9
 	k8s.io/apimachinery v0.33.3
 	k8s.io/client-go v0.33.3
 )
