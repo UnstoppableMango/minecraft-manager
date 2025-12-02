@@ -2,7 +2,7 @@ module github.com/unstoppablemango/minecraft-manager
 
 go 1.24.4
 
-toolchain go1.25.3
+toolchain go1.25.4
 
 tool (
 	github.com/bufbuild/buf/cmd/buf
