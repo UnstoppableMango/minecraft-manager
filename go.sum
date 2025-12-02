@@ -289,6 +289,7 @@ github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/
 github.com/google/pprof v0.0.0-20250607225305-033d6d78b36a h1://KbezygeMJZCSHH+HgUZiTeSoiuFspbMg1ge+eFj18=
 github.com/google/pprof v0.0.0-20250607225305-033d6d78b36a/go.mod h1:5hDyRhoBCxViHszMt12TnOpEI4VVi+U8Gm9iphldiMA=
 github.com/google/pprof v0.0.0-20250903194437-c28834ac2320/go.mod h1:I6V7YzU0XDpsHqbsyrghnFZLO1gwK6NPTNvmetQIk9U=
+github.com/google/pprof v0.0.0-20251007162407-5df77e3f7d1d/go.mod h1:I6V7YzU0XDpsHqbsyrghnFZLO1gwK6NPTNvmetQIk9U=
 github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 h1:El6M4kTTCOh6aBiKaUGG7oYTSPP8MxqL4YI3kZKwcP4=
 github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510/go.mod h1:pupxD2MaaD3pAXIBCelhxNneeOaAeabZDe5s4K6zSpQ=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
@@ -535,6 +536,8 @@ github.com/unmango/go v0.5.1 h1:gEDM8/w5weCPnFEAGtKPI/k0blrXlFD/fm53Hnhd9So=
 github.com/unmango/go v0.5.1/go.mod h1:1ObbQEueuRH/AzkLE17UX1qvoFWzlKrtj4xzNgqcY08=
 github.com/unmango/go v0.8.0 h1:hOySZadKJcJaUhZL9Gy5VMug4WYUTtBnJ49IRJpza8I=
 github.com/unmango/go v0.8.0/go.mod h1:43YHfQ/hbCwVRB38c0s4kr3R+HssYRBan9Y42UYiXh4=
+github.com/unmango/go v0.10.2 h1:blMGCkMkisDkDvvCUT70lKcOqbV4Ha53Kq2IscMUTsM=
+github.com/unmango/go v0.10.2/go.mod h1:q5ESTDFfANpShNV5e03sdEzO6aQhOX6E8LIR/NDGdt4=
 github.com/vbatts/tar-split v0.12.1 h1:CqKoORW7BUWBe7UL/iqTVvkTBOF8UvOMKOIZykxnnbo=
 github.com/vbatts/tar-split v0.12.1/go.mod h1:eF6B6i6ftWQcDqEn3/iGFRFRo8cBIMSJVOpnNdfTMFA=
 github.com/x448/float16 v0.8.4 h1:qLwI1I70+NjRFUR3zs1JPUCgaCXSh3SW62uAKT1mSBM=

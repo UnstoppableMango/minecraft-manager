@@ -18,7 +18,7 @@ require (
 	connectrpc.com/grpcreflect v1.3.0
 	github.com/charmbracelet/log v0.4.2
 	github.com/olivere/vite v0.1.0
-	github.com/unmango/go v0.8.0
+	github.com/unmango/go v0.10.2
 	golang.org/x/net v0.47.0
 	google.golang.org/protobuf v1.36.10
 	k8s.io/apimachinery v0.34.2
@@ -119,7 +119,7 @@ require (
 	github.com/google/go-containerregistry v0.20.6 // indirect
 	github.com/google/go-github/v72 v72.0.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/google/pprof v0.0.0-20250903194437-c28834ac2320 // indirect
+	github.com/google/pprof v0.0.0-20251007162407-5df77e3f7d1d // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.4-0.20250319132907-e064f32e3674 // indirect
