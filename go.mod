@@ -1,6 +1,6 @@
 module github.com/unstoppablemango/minecraft-manager
 
-go 1.24.4
+go 1.25.5
 
 toolchain go1.25.6
 
@@ -18,7 +18,7 @@ require (
 	connectrpc.com/grpcreflect v1.3.0
 	github.com/charmbracelet/log v0.4.2
 	github.com/olivere/vite v0.1.0
-	github.com/unmango/go v0.10.2
+	github.com/unmango/go v0.15.1
 	golang.org/x/net v0.49.0
 	google.golang.org/protobuf v1.36.11
 	k8s.io/apimachinery v0.34.2
