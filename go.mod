@@ -16,7 +16,7 @@ tool (
 require (
 	connectrpc.com/connect v1.19.2
 	connectrpc.com/grpcreflect v1.3.0
-	github.com/charmbracelet/log v0.4.2
+	github.com/charmbracelet/log/v2 v2.0.0
 	github.com/olivere/vite v0.1.0
 	github.com/unmango/go v0.10.2
 	golang.org/x/net v0.49.0
