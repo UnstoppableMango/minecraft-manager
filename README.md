@@ -1,5 +1,7 @@
 # UnstoppableMango's Minecraft UI
 
+[![Hercules CI](https://hercules-ci.com/api/v1/site/github/account/UnstoppableMango/project/minecraft-manager/badge)](https://hercules-ci.com/github/UnstoppableMango/minecraft-manager)
+
 `minecraft-manager` is a visual management tool for deploying Minecraft servers across various platforms.
 
 ## Quickstart
